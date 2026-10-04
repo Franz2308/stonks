@@ -7,7 +7,7 @@
 
 ---
 
-## 📌 Descripción del Proyecto
+## Descripción del Proyecto
 
 **Stonks** es una solución web empresarial y multiplataforma concebida para reemplazar el cuaderno tradicional de notas en pequeños comercios de barrio (bodegas, panaderías, carnicerías, boticas, fruterías, bazares, peluquerías, spas, entre otros). Permite llevar de forma automatizada, transparente y matemáticamente rigurosa el control de la cuenta corriente de créditos otorgados a clientes de su zona de influencia.
 
@@ -15,7 +15,7 @@ La plataforma opera bajo una arquitectura **multitienda y multirol**, permitiend
 
 ---
 
-## ⚖️ Convenciones Financieras y Normativas (Anexo A del Enunciado)
+## Convenciones Financieras y Normativas (Anexo A del Enunciado)
 
 El motor financiero ([`financial_engine.py`](file:///C:/Users/Frank/Documents/antigravity/happy-carson/stonks/financial_engine.py)) implementa estrictamente las directrices del curso:
 
@@ -39,7 +39,7 @@ El motor financiero ([`financial_engine.py`](file:///C:/Users/Frank/Documents/an
 
 ---
 
-## 👥 Roles y Flujo del Sistema
+## Roles y Flujo del Sistema
 
 | Rol | Pantallas y Funcionalidades |
 |---|---|
@@ -50,7 +50,7 @@ El motor financiero ([`financial_engine.py`](file:///C:/Users/Frank/Documents/an
 
 ---
 
-## 🔑 Credenciales Demo de Acceso Rápido
+## Credenciales Demo de Acceso Rápido
 
 La pantalla de inicio de sesión incluye botones de acceso con 1-click para evaluar de inmediato cada perfil:
 
@@ -63,7 +63,7 @@ La pantalla de inicio de sesión incluye botones de acceso con 1-click para eval
 
 ---
 
-## 🚀 Guía de Instalación y Ejecución Local
+## Guía de Instalación y Ejecución Local
 
 ### Prerrequisitos
 - Python 3.10 o superior instalado.
@@ -99,7 +99,7 @@ run.bat
 
 ---
 
-## 🧪 Pruebas Unitarias Automatizadas
+## Pruebas Unitarias Automatizadas
 
 El proyecto incluye dos suites completas de pruebas unitarias que validan la matemática financiera y las rutas web:
 
@@ -113,7 +113,7 @@ python -m unittest tests/test_webapp.py
 
 ---
 
-## 📂 Estructura del Repositorio
+## Estructura del Repositorio
 
 ```text
 stonks/
