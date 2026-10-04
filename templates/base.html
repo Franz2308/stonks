@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-50">
+<html lang="es" class="h-full bg-slate-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Stonks{% endblock %} - Crédito Comercial de Barrio</title>
+    <title>{% block title %}Stonks{% endblock %} - BundleRock Financial System</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -11,131 +11,149 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#fff1f2',
-                            100: '#ffe4e6',
-                            500: '#f43f5e',
-                            600: '#e11d48',
-                            700: '#be123c',
-                            800: '#9f1239',
-                            900: '#881337',
-                            upc: '#c8102e'
+                        navy: {
+                            800: '#1e3a66',
+                            900: '#1a365d',
+                            950: '#0f2442'
+                        },
+                        bundlerock: {
+                            header: '#1a365d',
+                            logo: '#244a77',
+                            border: '#0f2442',
+                            accent: '#2563eb',
+                            sky: '#38bdf8'
                         }
                     }
                 }
             }
         }
     </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bundlerock.css') }}">
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
 </head>
-<body class="h-full flex flex-col font-sans text-slate-800 antialiased">
-    <!-- Navbar -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center space-x-3">
-                    <a href="{{ url_for('index') }}" class="flex items-center space-x-2 text-brand-upc font-black text-2xl tracking-tight">
-                        <i data-lucide="trending-up" class="w-8 h-8"></i>
-                        <span>STONKS</span>
-                    </a>
-                    <span class="text-xs bg-red-100 text-brand-upc font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                        Finanzas SI642
-                    </span>
-                    {% if current_tienda %}
-                    <span class="hidden md:inline-flex items-center text-sm font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-md border border-slate-200">
-                        <i data-lucide="store" class="w-4 h-4 mr-1 text-slate-500"></i>
-                        {{ current_tienda.nombre_comercial }} ({{ current_tienda.giro }})
-                    </span>
-                    {% endif %}
-                </div>
-
-                <!-- Navigation Links -->
-                {% if session.user_id %}
-                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
-                    {% if session.rol == 'admin_sistema' %}
-                    <a href="{{ url_for('admin_dashboard') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
-                        <i data-lucide="layout-grid" class="w-4 h-4"></i> Tiendas
-                    </a>
-                    {% elif session.rol == 'admin_tienda' %}
-                    <a href="{{ url_for('store_dashboard') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-                    </a>
-                    <a href="{{ url_for('pos_credito') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
-                        <i data-lucide="shopping-cart" class="w-4 h-4"></i> POS Crédito
-                    </a>
-                    <a href="{{ url_for('liquidaciones') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
-                        <i data-lucide="file-text" class="w-4 h-4"></i> Listados Corte
-                    </a>
-                    <a href="{{ url_for('cobranzas') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
-                        <i data-lucide="banknote" class="w-4 h-4"></i> Caja y Pagos
-                    </a>
-                    <a href="{{ url_for('clientes') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
-                        <i data-lucide="users" class="w-4 h-4"></i> Clientes
-                    </a>
-                    <a href="{{ url_for('productos') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
-                        <i data-lucide="package" class="w-4 h-4"></i> Catálogo
-                    </a>
-                    {% elif session.rol == 'cliente' %}
-                    <a href="{{ url_for('customer_portal') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
-                        <i data-lucide="wallet" class="w-4 h-4"></i> Mi Cuenta Corriente
-                    </a>
-                    {% endif %}
-                    <a href="{{ url_for('simulator') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
-                        <i data-lucide="calculator" class="w-4 h-4"></i> Simulador
-                    </a>
-                </nav>
-
-                <!-- User profile & Logout -->
-                <div class="flex items-center space-x-3">
-                    <div class="text-right hidden sm:block">
-                        <div class="text-xs font-bold text-slate-900 leading-tight">{{ session.nombre_completo }}</div>
-                        <div class="text-[11px] font-medium text-slate-500 uppercase">{{ session.rol.replace('_', ' ') }}</div>
-                    </div>
-                    <a href="{{ url_for('logout') }}" title="Cerrar sesión" class="p-2 text-slate-500 hover:text-brand-upc hover:bg-red-50 rounded-lg transition-colors">
-                        <i data-lucide="log-out" class="w-5 h-5"></i>
-                    </a>
-                </div>
-                {% else %}
-                <div class="flex items-center space-x-2">
-                    <a href="{{ url_for('simulator') }}" class="text-sm font-semibold text-slate-600 hover:text-brand-upc px-3 py-1.5">
-                        Simulador
-                    </a>
-                    <a href="{{ url_for('login') }}" class="text-sm font-bold bg-brand-upc text-white px-4 py-2 rounded-lg hover:bg-red-700 shadow-sm transition">
-                        Iniciar Sesión
-                    </a>
-                </div>
-                {% endif %}
+<body class="h-full flex flex-col font-sans text-slate-900 bg-slate-100 antialiased select-none">
+    
+    <!-- 1. BundleRock TitleBar Corporativo (#1a365d) -->
+    <header class="h-10 bg-[#1a365d] text-white flex items-center justify-between px-3 select-none shrink-0 border-b border-[#0f2442] shadow-sm z-50">
+        <!-- Left: Logo & Branding Oficial BundleRock -->
+        <div class="flex items-center gap-2.5">
+            <div class="w-6 h-6 rounded-full border border-white/70 bg-[#244a77] flex items-center justify-center shadow-sm">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5 text-white stroke-[2.5]"></i>
             </div>
+            <a href="{{ url_for('index') }}" class="flex items-center gap-2 text-white hover:text-sky-200 transition">
+                <span class="tracking-wide text-xs font-black uppercase">BundleRock</span>
+                <span class="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-sky-200 font-mono tracking-normal uppercase">
+                    Financial Workstation &bull; SI642
+                </span>
+            </a>
+            {% if current_tienda %}
+            <span class="hidden sm:inline-flex items-center text-xs font-semibold text-white/90 bg-[#244a77] px-2.5 py-0.5 rounded border border-white/20 ml-2">
+                <i data-lucide="store" class="w-3 h-3 mr-1 text-sky-300"></i>
+                {{ current_tienda.nombre_comercial }} &bull; {{ current_tienda.giro }}
+            </span>
+            {% endif %}
+        </div>
+
+        <!-- Right: Contexto de Usuario & Salir -->
+        <div class="flex items-center gap-3">
+            {% if session.user_id %}
+            <div class="text-right hidden sm:block">
+                <div class="text-xs font-bold text-white leading-tight">{{ session.nombre_completo }}</div>
+                <div class="text-[10px] font-mono text-sky-200 uppercase tracking-wider">{{ session.rol.replace('_', ' ') }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" title="Cerrar sesión" class="w-8 h-7 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 rounded transition cursor-pointer">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+            </a>
+            {% else %}
+            <div class="flex items-center gap-2">
+                <a href="{{ url_for('simulator') }}" class="text-xs font-semibold text-white/90 hover:text-white px-2 py-1 rounded hover:bg-white/10 transition">
+                    Simulador Financiero
+                </a>
+                <a href="{{ url_for('login') }}" class="text-xs font-bold bg-[#2563eb] text-white px-3 py-1 rounded shadow-sm hover:bg-blue-600 transition">
+                    Acceder
+                </a>
+            </div>
+            {% endif %}
         </div>
     </header>
 
-    <!-- Flash Messages -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
+    <!-- 2. BundleRock Win32 Retro-Modern Secondary Toolbar -->
+    {% if session.user_id %}
+    <nav class="bg-slate-200 border-b border-slate-300 px-3 py-1.5 flex items-center justify-between gap-2 shrink-0 min-w-0 overflow-x-auto shadow-xs">
+        <div class="flex items-center gap-1 min-w-0">
+            {% if session.rol == 'admin_sistema' %}
+            <a href="{{ url_for('admin_dashboard') }}" class="btn-win32 {{ 'bg-[#cce8ff] border-blue-400 text-blue-900' if request.path == url_for('admin_dashboard') }}">
+                <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>Gestión de Tiendas</span>
+            </a>
+            {% elif session.rol == 'admin_tienda' %}
+            <a href="{{ url_for('store_dashboard') }}" class="btn-win32 {{ 'bg-[#cce8ff] border-blue-400 text-blue-900' if request.path == url_for('store_dashboard') }}">
+                <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-slate-700"></i>
+                <span>Dashboard</span>
+            </a>
+            <div class="w-px h-4 bg-slate-300 mx-0.5"></div>
+            <a href="{{ url_for('pos_credito') }}" class="btn-win32 {{ 'bg-[#cce8ff] border-blue-400 text-blue-900' if request.path == url_for('pos_credito') }}">
+                <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>POS Crédito</span>
+            </a>
+            <a href="{{ url_for('liquidaciones') }}" class="btn-win32 {{ 'bg-[#cce8ff] border-blue-400 text-blue-900' if request.path == url_for('liquidaciones') }}">
+                <i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-600"></i>
+                <span>Listados de Corte</span>
+            </a>
+            <a href="{{ url_for('cobranzas') }}" class="btn-win32 {{ 'bg-[#cce8ff] border-blue-400 text-blue-900' if request.path == url_for('cobranzas') }}">
+                <i data-lucide="banknote" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <span>Caja y Prelación</span>
+            </a>
+            <div class="w-px h-4 bg-slate-300 mx-0.5"></div>
+            <a href="{{ url_for('clientes') }}" class="btn-win32 {{ 'bg-[#cce8ff] border-blue-400 text-blue-900' if request.path == url_for('clientes') }}">
+                <i data-lucide="users" class="w-3.5 h-3.5 text-slate-600"></i>
+                <span>Clientes y Políticas</span>
+            </a>
+            <a href="{{ url_for('productos') }}" class="btn-win32 {{ 'bg-[#cce8ff] border-blue-400 text-blue-900' if request.path == url_for('productos') }}">
+                <i data-lucide="package" class="w-3.5 h-3.5 text-slate-600"></i>
+                <span>Catálogo de Precios</span>
+            </a>
+            {% elif session.rol == 'cliente' %}
+            <a href="{{ url_for('customer_portal') }}" class="btn-win32 {{ 'bg-[#cce8ff] border-blue-400 text-blue-900' if request.path == url_for('customer_portal') }}">
+                <i data-lucide="wallet" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>Estado de Cuenta y Línea de Crédito</span>
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="flex items-center gap-1.5 ml-auto shrink-0">
+            <a href="{{ url_for('simulator') }}" class="btn-win32 {{ 'bg-[#cce8ff] border-blue-400 text-blue-900' if request.path == url_for('simulator') }}">
+                <i data-lucide="calculator" class="w-3.5 h-3.5 text-slate-700"></i>
+                <span>Calculadora Financiera</span>
+            </a>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Flash Messages (Notificaciones con estilo utilitario sobrio) -->
+    <div class="max-w-7xl mx-auto px-4 w-full mt-3">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div class="space-y-2">
+                <div class="space-y-1.5">
                 {% for category, message in messages %}
-                    {% set bg = 'bg-blue-50 border-blue-200 text-blue-800' %}
+                    {% set border = 'border-blue-400 bg-blue-50 text-blue-900' %}
                     {% set icon = 'info' %}
                     {% if category == 'success' %}
-                        {% set bg = 'bg-emerald-50 border-emerald-200 text-emerald-800' %}
-                        {% set icon = 'check-circle' %}
+                        {% set border = 'border-emerald-400 bg-emerald-50 text-emerald-950' %}
+                        {% set icon = 'check-circle-2' %}
                     {% elif category == 'danger' %}
-                        {% set bg = 'bg-rose-50 border-rose-200 text-rose-800' %}
-                        {% set icon = 'alert-triangle' %}
+                        {% set border = 'border-red-400 bg-red-50 text-red-950' %}
+                        {% set icon = 'alert-octagon' %}
                     {% elif category == 'warning' %}
-                        {% set bg = 'bg-amber-50 border-amber-200 text-amber-800' %}
-                        {% set icon = 'alert-circle' %}
+                        {% set border = 'border-amber-400 bg-amber-50 text-amber-950' %}
+                        {% set icon = 'alert-triangle' %}
                     {% endif %}
-                    <div class="flex items-center p-4 border rounded-xl shadow-sm {{ bg }}" role="alert">
-                        <i data-lucide="{{ icon }}" class="w-5 h-5 mr-3 flex-shrink-0"></i>
-                        <div class="text-sm font-medium leading-relaxed">{{ message }}</div>
+                    <div class="flex items-center px-3 py-2 border rounded-sm shadow-xs text-xs font-semibold {{ border }}" role="alert">
+                        <i data-lucide="{{ icon }}" class="w-4 h-4 mr-2 flex-shrink-0"></i>
+                        <span>{{ message }}</span>
                     </div>
                 {% endfor %}
                 </div>
@@ -143,16 +161,24 @@
         {% endwith %}
     </div>
 
-    <!-- Main Content -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Main Content Workstation Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-4 overflow-y-auto">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 mt-auto py-6">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
-            <p class="font-medium text-slate-700">Sistema de Control de Cuenta Corriente y Crédito de Barrio (Multi-tienda)</p>
-            <p class="mt-1">SI642 Finanzas e Ingeniería Económica &bull; UPC Ciclo 2026-20 &bull; Base 360 &bull; Método Francés &bull; Prelación de Pagos</p>
+    <!-- BundleRock Win32 Status Bar Footer -->
+    <footer class="h-6 bg-slate-200 border-t border-slate-300 px-3 flex items-center justify-between text-[11px] text-slate-600 select-none shrink-0 font-mono">
+        <div class="flex items-center gap-3">
+            <span>UPC &bull; SI642 Finanzas</span>
+            <span class="text-slate-400">|</span>
+            <span>Base 360 Días &bull; Mes Comercial 30 Días</span>
+            <span class="text-slate-400">|</span>
+            <span>Método Francés Ordinario &bull; Prelación de Pagos</span>
+        </div>
+        <div class="flex items-center gap-3 text-slate-500">
+            <span>Modo: <strong class="text-slate-700 font-sans">Producción Local</strong></span>
+            <span class="text-slate-400">|</span>
+            <span>BundleRock v2.4</span>
         </div>
     </footer>
 

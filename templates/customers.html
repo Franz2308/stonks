@@ -1,93 +1,93 @@
 {% extends "base.html" %}
 
-{% block title %}Gestión de Clientes y Políticas de Crédito{% endblock %}
+{% block title %}Clientes y Políticas Crediticias{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-4">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-200">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-slate-300">
         <div>
-            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Clientes y Políticas de Crédito</h1>
-            <p class="text-sm text-slate-500 mt-1">Configuración personalizada de tasas, plazos, fechas de corte y límites de endeudamiento.</p>
+            <h1 class="text-xl font-bold text-slate-900 tracking-tight uppercase">Gestión de Clientes y Políticas de Crédito</h1>
+            <p class="text-xs text-slate-500">Administración de carteras vecinales, límites de endeudamiento, tasas TEA/TNA y calendarios de pago.</p>
         </div>
-        <button onclick="document.getElementById('modal-nuevo-cliente').classList.remove('hidden')" class="mt-3 sm:mt-0 inline-flex items-center px-4 py-2.5 bg-brand-upc text-white font-bold rounded-xl shadow hover:bg-red-700 transition text-sm">
-            <i data-lucide="user-plus" class="w-4 h-4 mr-2"></i>
-            <span>Registrar Nuevo Cliente</span>
+        <button onclick="document.getElementById('modal-nuevo-cliente').classList.remove('hidden')" class="btn-win32 btn-win32-primary mt-2 sm:mt-0">
+            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+            <span>Nuevo Cliente Vecino</span>
         </button>
     </div>
 
-    <!-- Lista de Clientes -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <!-- Lista de Clientes en Grid Utilitario -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {% for c in clientes %}
         {% set disp = c.limite_credito - c.deuda_actual %}
         {% set pct = (c.deuda_actual / c.limite_credito * 100) if c.limite_credito > 0 else 0 %}
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col justify-between hover:shadow-md transition">
+        <div class="card-bundlerock p-3.5 flex flex-col justify-between hover:border-slate-400 transition">
             <div>
                 <!-- Top Card Info -->
-                <div class="flex justify-between items-start">
+                <div class="flex justify-between items-start border-b border-slate-200 pb-2">
                     <div>
-                        <h3 class="font-extrabold text-slate-900 text-base leading-snug">{{ c.nombres }} {{ c.apellidos }}</h3>
-                        <div class="text-xs text-slate-500 font-mono mt-0.5">{{ c.tipo_documento }}: {{ c.num_documento }}</div>
+                        <h3 class="font-bold text-slate-900 text-xs">{{ c.nombres }} {{ c.apellidos }}</h3>
+                        <div class="text-[10px] text-slate-500 font-mono mt-0.5">{{ c.tipo_documento }}: {{ c.num_documento }}</div>
                     </div>
                     {% if c.deuda_actual >= c.limite_credito %}
-                    <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-800">Límite alcanzado</span>
+                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-xs bg-red-100 text-red-800 border border-red-200 font-mono">LÍMITE</span>
                     {% elif c.deuda_actual > 0 %}
-                    <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800">Con saldo</span>
+                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-xs bg-amber-100 text-amber-800 border border-amber-200 font-mono">SALDO</span>
                     {% else %}
-                    <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Al día</span>
+                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-xs bg-emerald-100 text-emerald-800 border border-emerald-200 font-mono">AL DÍA</span>
                     {% endif %}
                 </div>
 
-                <div class="text-xs text-slate-500 mt-2 flex items-center">
-                    <i data-lucide="map-pin" class="w-3.5 h-3.5 mr-1 text-slate-400"></i>
+                <div class="text-[11px] text-slate-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="map-pin" class="w-3 h-3 text-slate-400 shrink-0"></i>
                     <span class="truncate">{{ c.direccion }}</span>
                 </div>
-                <div class="text-xs text-slate-500 mt-1 flex items-center">
-                    <i data-lucide="phone" class="w-3.5 h-3.5 mr-1 text-slate-400"></i>
+                <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-1 font-mono">
+                    <i data-lucide="phone" class="w-3 h-3 text-slate-400 shrink-0"></i>
                     <span>{{ c.telefono }}</span>
                 </div>
 
                 <!-- Barra de Línea de Crédito -->
-                <div class="mt-4 pt-3 border-t border-slate-100">
-                    <div class="flex justify-between text-xs mb-1">
+                <div class="mt-3 pt-2.5 border-t border-slate-100">
+                    <div class="flex justify-between text-[11px] font-mono mb-1">
                         <span class="text-slate-500">Deuda: <strong class="text-slate-900">{{ c.deuda_actual | moneda }}</strong></span>
                         <span class="text-slate-500">Límite: <strong class="text-slate-900">{{ c.limite_credito | moneda }}</strong></span>
                     </div>
-                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div class="h-full {{ 'bg-rose-500' if pct > 80 else 'bg-brand-upc' }}" style="width: {{ [pct, 100] | min }}%"></div>
+                    <div class="w-full bg-slate-200 h-1.5 rounded-xs overflow-hidden">
+                        <div class="h-full {{ 'bg-red-500' if pct > 80 else 'bg-[#1a365d]' }}" style="width: {{ [pct, 100] | min }}%"></div>
                     </div>
-                    <div class="flex justify-between text-[11px] text-slate-400 mt-1">
-                        <span>Disponible: <strong class="text-emerald-600 font-bold">{{ disp | moneda }}</strong></span>
+                    <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+                        <span>Disponible: <strong class="text-emerald-700 font-bold">{{ disp | moneda }}</strong></span>
                         <span>{{ pct | round(1) }}% en uso</span>
                     </div>
                 </div>
 
-                <!-- Condiciones Financieras Contractuales -->
-                <div class="mt-4 bg-slate-50 p-3 rounded-xl border border-slate-200/60 text-xs space-y-1.5">
+                <!-- Parámetros Financieros Contractuales -->
+                <div class="mt-3 bg-slate-50 p-2.5 rounded-xs border border-slate-200 text-[10px] font-mono space-y-1">
                     <div class="flex justify-between">
-                        <span class="text-slate-500">Tasa Compensatoria:</span>
+                        <span class="text-slate-500 font-sans">Compensatoria:</span>
                         <span class="font-bold text-slate-800">{{ c.tipo_tasa_comp }} {{ (c.tasa_comp * 100) | round(2) }}% ({{ c.cap_comp }})</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-500">Tasa Moratoria:</span>
-                        <span class="font-bold text-rose-600">{{ c.tipo_tasa_mora }} {{ (c.tasa_mora * 100) | round(2) }}%</span>
+                        <span class="text-slate-500 font-sans">Moratoria:</span>
+                        <span class="font-bold text-red-600">{{ c.tipo_tasa_mora }} {{ (c.tasa_mora * 100) | round(2) }}%</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-500">Ciclo Mensual:</span>
-                        <span class="font-medium text-slate-800">Corte día {{ c.dia_corte }} &bull; Pago día {{ c.dia_pago }}</span>
+                        <span class="text-slate-500 font-sans">Ciclo:</span>
+                        <span class="text-slate-800">Corte día {{ c.dia_corte }} &bull; Pago día {{ c.dia_pago }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-500">Plazo Máximo:</span>
-                        <span class="font-medium text-slate-800">{{ c.plazo_maximo_meses }} meses comerciales</span>
+                        <span class="text-slate-500 font-sans">Plazo Máx.:</span>
+                        <span class="text-slate-800">{{ c.plazo_maximo_meses }} meses comerciales</span>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Action -->
-            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-end">
-                <a href="{{ url_for('pos_credito') }}" class="text-xs font-bold text-brand-upc hover:underline flex items-center">
-                    <span>Nueva venta para este cliente</span>
-                    <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1"></i>
+            <div class="mt-3 pt-2 border-t border-slate-100 flex justify-end">
+                <a href="{{ url_for('pos_credito') }}" class="text-[11px] font-bold text-blue-700 hover:underline flex items-center gap-1">
+                    <span>Emitir venta a crédito</span>
+                    <i data-lucide="arrow-right" class="w-3 h-3"></i>
                 </a>
             </div>
         </div>
@@ -95,146 +95,136 @@
     </div>
 </div>
 
-<!-- Modal Nuevo Cliente -->
-<div id="modal-nuevo-cliente" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
-        <div class="flex justify-between items-center pb-3 border-b border-slate-200">
-            <h3 class="text-lg font-black text-slate-800">Registrar Cliente y Condiciones Crediticias</h3>
+<!-- Modal Nuevo Cliente (Win32 Style) -->
+<div id="modal-nuevo-cliente" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-md max-w-xl w-full p-5 shadow-xl border border-slate-300 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center pb-2.5 border-b border-slate-200">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900">Registrar Cliente Vecino</h3>
             <button onclick="document.getElementById('modal-nuevo-cliente').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-                <i data-lucide="x" class="w-5 h-5"></i>
+                <i data-lucide="x" class="w-4 h-4"></i>
             </button>
         </div>
 
-        <form action="{{ url_for('clientes_alta') }}" method="POST" class="mt-4 space-y-4">
-            <div class="space-y-3">
-                <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Datos Personales y Ubicación</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Tipo Doc. *</label>
-                        <select name="tipo_documento" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white">
-                            <option value="DNI">DNI (8 dígitos)</option>
-                            <option value="CE">Carnet Extranjería</option>
-                            <option value="Pasaporte">Pasaporte</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Número de Documento *</label>
-                        <input type="text" name="num_documento" required placeholder="45891234" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-mono">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Nombres *</label>
-                        <input type="text" name="nombres" required placeholder="Ana María" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Apellidos *</label>
-                        <input type="text" name="apellidos" required placeholder="García Silva" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Teléfono / WhatsApp *</label>
-                        <input type="text" name="telefono" required placeholder="987654321" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Correo Electrónico</label>
-                        <input type="email" name="correo" placeholder="ana@gmail.com" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                    </div>
-                </div>
-
+        <form action="{{ url_for('clientes_alta') }}" method="POST" class="mt-3.5 space-y-3">
+            <div class="grid grid-cols-3 gap-2.5">
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Dirección (Zona de Influencia del Barrio) *</label>
-                    <input type="text" name="direccion" required placeholder="Calle Los Pinos 345, Urbanización..." class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                    <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">Tipo Doc. *</label>
+                    <select name="tipo_documento" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs bg-white">
+                        <option value="DNI">DNI (8 dígitos)</option>
+                        <option value="CE">Carnet Extranjería</option>
+                    </select>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">N° Documento *</label>
+                    <input type="text" name="num_documento" required placeholder="45891234" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs font-mono">
                 </div>
             </div>
 
-            <!-- Parámetros de Crédito -->
-            <div class="bg-red-50/50 p-4 rounded-2xl border border-red-100 space-y-3">
-                <p class="text-xs font-bold text-brand-upc uppercase tracking-wider">Políticas Financieras y Condiciones de Crédito</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">Nombres *</label>
+                    <input type="text" name="nombres" required placeholder="Ana María" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">Apellidos *</label>
+                    <input type="text" name="apellidos" required placeholder="García Silva" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">Teléfono Celular *</label>
+                    <input type="text" name="telefono" required placeholder="987654321" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs font-mono">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">Correo</label>
+                    <input type="email" name="correo" placeholder="correo@dominio.com" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-semibold text-slate-700 mb-0.5">Dirección de Residencia (Zona de Influencia) *</label>
+                <input type="text" name="direccion" required placeholder="Jr. Las Américas 456" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs">
+            </div>
+
+            <!-- Parámetros Financieros -->
+            <div class="bg-slate-50 p-3 rounded-xs border border-slate-200 space-y-2">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-600 block font-mono">Condiciones de Crédito Contractual</span>
+                
+                <div class="grid grid-cols-3 gap-2">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Límite de Crédito (S/) *</label>
-                        <input type="number" step="10.0" name="limite_credito" required value="500.0" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-bold text-brand-upc">
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">Límite Crédito *</label>
+                        <input type="number" step="10.0" name="limite_credito" required value="500.0" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs font-mono font-bold text-blue-900">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Plazo Máx. (Meses) *</label>
-                        <input type="number" min="1" max="24" name="plazo_maximo_meses" required value="6" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">Plazo Máx. (Meses)</label>
+                        <input type="number" min="1" max="24" name="plazo_maximo_meses" required value="6" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Moneda *</label>
-                        <select name="moneda" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white">
-                            <option value="PEN">Soles (S/)</option>
-                            <option value="USD">Dólares ($)</option>
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">Moneda</label>
+                        <select name="moneda" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs bg-white font-mono">
+                            <option value="PEN">PEN (Soles)</option>
+                            <option value="USD">USD ($)</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Día de Corte Mensual (1-28) *</label>
-                        <input type="number" min="1" max="28" name="dia_corte" required value="20" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">Día Corte Mensual *</label>
+                        <input type="number" min="1" max="28" name="dia_corte" required value="20" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Día de Pago Pactado (1-28) *</label>
-                        <input type="number" min="1" max="28" name="dia_pago" required value="26" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">Día Pago Mensual *</label>
+                        <input type="number" min="1" max="28" name="dia_pago" required value="26" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs font-mono">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="grid grid-cols-3 gap-2">
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Tipo Tasa Comp. *</label>
-                        <select name="tipo_tasa_comp" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white">
-                            <option value="TEA">TEA (Efectiva)</option>
-                            <option value="TNA">TNA (Nominal)</option>
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">Tasa Comp. *</label>
+                        <select name="tipo_tasa_comp" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs bg-white font-mono">
+                            <option value="TEA">TEA</option>
+                            <option value="TNA">TNA</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Tasa Comp. Anual (%) *</label>
-                        <input type="number" step="0.01" name="tasa_comp" required value="24.0" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">Valor Anual (%)</label>
+                        <input type="number" step="0.01" name="tasa_comp" required value="24.0" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs font-mono font-bold">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Cap. si es TNA</label>
-                        <select name="cap_comp" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white">
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">Cap. TNA</label>
+                        <select name="cap_comp" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs bg-white font-mono">
                             <option value="Diaria">Diaria (360)</option>
                             <option value="Mensual">Mensual (12)</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Tipo Tasa Mora *</label>
-                        <select name="tipo_tasa_mora" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white">
-                            <option value="TEA">TEA Moratoria</option>
-                            <option value="TNA">TNA Moratoria</option>
-                        </select>
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">Tasa Moratoria Anual (%)</label>
+                        <input type="number" step="0.01" name="tasa_mora" required value="5.0" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs font-mono text-red-600 font-bold">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Tasa Mora Anual (%) *</label>
-                        <input type="number" step="0.01" name="tasa_mora" required value="5.0" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-rose-600 font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">COK Comercio (%)</label>
-                        <input type="number" step="0.01" name="cok_anual" required value="15.0" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[10px] font-bold uppercase text-slate-600 mb-0.5">COK Comercio (%)</label>
+                        <input type="number" step="0.01" name="cok_anual" required value="15.0" class="w-full px-2 py-1 rounded-sm border border-slate-300 text-xs font-mono">
                     </div>
                 </div>
 
-                <div class="pt-2">
-                    <label class="flex items-center text-xs text-slate-700 font-medium">
-                        <input type="checkbox" name="crear_usuario_web" checked class="rounded border-slate-300 text-brand-upc focus:ring-red-500 mr-2">
-                        Generar credenciales web automáticas para que el cliente consulte su estado de cuenta desde el celular.
+                <div class="pt-1">
+                    <label class="flex items-center text-[11px] text-slate-700">
+                        <input type="checkbox" name="crear_usuario_web" checked class="rounded-xs border-slate-300 text-blue-600 mr-1.5">
+                        Generar cuenta de acceso web para consulta móvil del cliente.
                     </label>
                 </div>
             </div>
 
-            <div class="flex justify-end space-x-3 pt-4 border-t border-slate-200">
-                <button type="button" onclick="document.getElementById('modal-nuevo-cliente').classList.add('hidden')" class="px-4 py-2 border border-slate-300 rounded-xl text-slate-700 text-sm font-medium hover:bg-slate-50">
+            <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
+                <button type="button" onclick="document.getElementById('modal-nuevo-cliente').classList.add('hidden')" class="btn-win32">
                     Cancelar
                 </button>
-                <button type="submit" class="px-5 py-2 bg-brand-upc text-white rounded-xl text-sm font-bold shadow hover:bg-red-700">
+                <button type="submit" class="btn-win32 btn-win32-primary">
                     Guardar y Asignar Línea
                 </button>
             </div>

@@ -1,102 +1,106 @@
 {% extends "base.html" %}
 
-{% block title %}Detalle de Listado de Pago #{{ liq.id }}{% endblock %}
+{% block title %}Detalle de Listado de Pago #{{ liq.id }} - Stonks{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6">
-    <div class="flex items-center justify-between pb-4 border-b border-slate-200">
-        <a href="{{ url_for('liquidaciones') }}" class="inline-flex items-center text-xs font-bold text-slate-500 hover:text-slate-800">
-            <i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Volver a listados
+<div class="max-w-4xl mx-auto space-y-4">
+    <!-- Barra de Acciones Superior -->
+    <div class="flex items-center justify-between pb-3 border-b border-slate-300">
+        <a href="{{ url_for('liquidaciones') }}" class="btn-win32">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5 mr-1"></i> Volver a listados
         </a>
         <div class="flex items-center space-x-2">
-            <button onclick="window.print()" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg text-xs font-bold flex items-center">
-                <i data-lucide="printer" class="w-4 h-4 mr-1.5"></i> Imprimir Comprobante
+            <button onclick="window.print()" class="btn-win32">
+                <i data-lucide="printer" class="w-3.5 h-3.5 mr-1"></i> Imprimir Comprobante
             </button>
             {% if liq.estado != 'Pagado' and session.rol == 'admin_tienda' %}
-            <a href="{{ url_for('cobranzas') }}" class="px-4 py-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded-lg text-xs font-bold flex items-center shadow-sm">
-                <i data-lucide="banknote" class="w-4 h-4 mr-1.5"></i> Ir a Caja a Cobrar
+            <a href="{{ url_for('cobranzas') }}" class="btn-win32 btn-win32-accent">
+                <i data-lucide="banknote" class="w-3.5 h-3.5 mr-1"></i> Ir a Caja a Cobrar
             </a>
             {% endif %}
         </div>
     </div>
 
-    <!-- Hoja de Liquidación / Recibo Formal -->
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 space-y-6">
+    <!-- Hoja de Liquidación / Recibo Formal (Aesthetic Win32 Retro-Modern) -->
+    <div class="card-bundlerock p-6 space-y-5">
         
         <!-- Header Tienda & Cliente -->
-        <div class="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-200">
+        <div class="flex flex-col sm:flex-row justify-between items-start gap-4 pb-4 border-b border-slate-300">
             <div>
-                <span class="text-xs font-extrabold uppercase tracking-wider text-brand-upc bg-red-50 px-2.5 py-1 rounded">
-                    ESTADO DE CUENTA Y LISTADO DE PAGO
+                <span class="inline-block px-2 py-0.5 bg-slate-100 border border-slate-300 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-700">
+                    ESTADO DE CUENTA Y LISTADO DE PAGO OFICIAL
                 </span>
-                <h1 class="text-2xl font-black text-slate-900 mt-2">{{ liq.nombre_comercial }}</h1>
+                <h1 class="text-xl font-bold text-slate-900 mt-1 uppercase tracking-tight">{{ liq.nombre_comercial }}</h1>
                 <p class="text-xs text-slate-500 font-mono">RUC: {{ liq.tienda_ruc }}</p>
-                <p class="text-xs text-slate-500 mt-1">Periodo Facturado: <strong class="text-slate-800">{{ liq.periodo_mes_anio }}</strong></p>
+                <p class="text-xs text-slate-600 mt-1">Periodo Facturado: <strong class="text-slate-900 font-mono">{{ liq.periodo_mes_anio }}</strong></p>
             </div>
-            <div class="sm:text-right bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-xs space-y-1">
-                <div class="font-bold text-slate-900 text-sm">{{ liq.cliente_nombre }}</div>
-                <div class="text-slate-500">DNI: <span class="font-mono font-bold text-slate-700">{{ liq.num_documento }}</span></div>
-                <div class="text-slate-500">Dirección: {{ liq.direccion }}</div>
-                <div class="text-slate-500">Teléfono: {{ liq.telefono }}</div>
+            <div class="sm:text-right bg-slate-50 p-3 rounded-xs border border-slate-300 text-xs space-y-0.5 min-w-[240px]">
+                <div class="font-bold text-slate-900 text-sm font-sans">{{ liq.cliente_nombre }}</div>
+                <div class="text-slate-600 font-mono">DNI: <span class="font-bold text-slate-900">{{ liq.num_documento }}</span></div>
+                <div class="text-slate-500 text-[11px]">Dirección: {{ liq.direccion }}</div>
+                <div class="text-slate-500 text-[11px]">Teléfono: {{ liq.telefono }}</div>
             </div>
         </div>
 
         <!-- Fechas Clave del Ciclo Crediticio -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-slate-50 p-3 rounded-xs border border-slate-300 font-mono">
             <div>
-                <span class="text-slate-400 font-bold uppercase text-[10px]">Fecha de Corte:</span>
-                <div class="font-bold text-slate-800 text-sm">{{ liq.fecha_corte }}</div>
+                <span class="text-slate-500 font-bold uppercase text-[10px] block">Fecha de Corte:</span>
+                <div class="font-bold text-slate-900 text-sm mt-0.5">{{ liq.fecha_corte }}</div>
             </div>
             <div>
-                <span class="text-slate-400 font-bold uppercase text-[10px]">Fecha de Pago Pactada:</span>
-                <div class="font-bold text-brand-upc text-sm">{{ liq.fecha_pago_pactada }}</div>
+                <span class="text-slate-500 font-bold uppercase text-[10px] block">Fecha de Pago Pactada:</span>
+                <div class="font-bold text-blue-700 text-sm mt-0.5">{{ liq.fecha_pago_pactada }}</div>
             </div>
             <div>
-                <span class="text-slate-400 font-bold uppercase text-[10px]">Tasa Compensatoria:</span>
-                <div class="font-bold text-slate-800 text-sm">{{ liq.tipo_tasa_comp }} {{ (liq.tasa_comp * 100) | round(2) }}%</div>
+                <span class="text-slate-500 font-bold uppercase text-[10px] block">Tasa Compensatoria:</span>
+                <div class="font-bold text-slate-900 text-sm mt-0.5">{{ liq.tipo_tasa_comp }} {{ (liq.tasa_comp * 100) | round(2) }}%</div>
             </div>
         </div>
 
         <!-- Detalle de Compras Cronológicas (Numeral 6 Enunciado) -->
         <div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 flex items-center">
-                <i data-lucide="list-ordered" class="w-4 h-4 mr-1.5 text-brand-upc"></i>
-                Detalle de Compras del Ciclo (Ordenadas Cronológicamente)
-            </h2>
-            <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <div class="card-header-bundlerock rounded-t-xs border border-b-0 border-slate-300 flex items-center justify-between">
+                <span class="flex items-center">
+                    <i data-lucide="list-ordered" class="w-3.5 h-3.5 mr-1.5 text-blue-700"></i>
+                    Detalle de Compras del Ciclo (Ordenadas Cronológicamente)
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">Total: {{ ventas | length }}</span>
+            </div>
+            <div class="border border-slate-300 rounded-b-xs overflow-hidden">
                 <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                    <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-300 font-mono uppercase tracking-wider">
                         <tr>
-                            <th class="p-3">Ticket / Fecha</th>
-                            <th class="p-3">Hora</th>
-                            <th class="p-3">Modalidad</th>
-                            <th class="p-3 text-right">Capital Compra</th>
-                            <th class="p-3 text-right">Interés Comp.</th>
-                            <th class="p-3 text-right">Total Ítem</th>
+                            <th class="p-2.5">Ticket / Fecha</th>
+                            <th class="p-2.5">Hora</th>
+                            <th class="p-2.5">Modalidad</th>
+                            <th class="p-2.5 text-right">Capital Compra</th>
+                            <th class="p-2.5 text-right">Interés Comp.</th>
+                            <th class="p-2.5 text-right">Total Ítem</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100">
+                    <tbody class="divide-y divide-slate-200 font-mono">
                         {% for v in ventas %}
-                        <tr class="hover:bg-slate-50">
-                            <td class="p-3">
-                                <span class="font-mono font-bold text-slate-900">{{ v.num_ticket }}</span>
-                                <div class="text-slate-400">{{ v.fecha_compra }}</div>
+                        <tr class="hover:bg-blue-50/40">
+                            <td class="p-2.5">
+                                <span class="font-bold text-slate-900">{{ v.num_ticket }}</span>
+                                <div class="text-[10px] text-slate-500 font-sans">{{ v.fecha_compra }}</div>
                             </td>
-                            <td class="p-3 text-slate-600 font-mono">{{ v.hora_compra }}</td>
-                            <td class="p-3">
+                            <td class="p-2.5 text-slate-600">{{ v.hora_compra }}</td>
+                            <td class="p-2.5 font-sans">
                                 {% if v.modalidad == 'Fin_De_Mes' %}
-                                <span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold text-[11px]">Fin de Mes</span>
+                                <span class="px-1.5 py-0.5 border border-blue-200 bg-blue-50 text-blue-800 font-bold text-[10px]">Fin de Mes</span>
                                 {% else %}
-                                <span class="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold text-[11px]">En Cuotas</span>
+                                <span class="px-1.5 py-0.5 border border-purple-200 bg-purple-50 text-purple-800 font-bold text-[10px]">En Cuotas</span>
                                 {% endif %}
                             </td>
-                            <td class="p-3 text-right font-medium text-slate-700">{{ v.monto_total_lista | moneda }}</td>
-                            <td class="p-3 text-right text-emerald-600 font-medium">{{ v.total_intereses | moneda }}</td>
-                            <td class="p-3 text-right font-bold text-slate-900">{{ v.total_a_pagar | moneda }}</td>
+                            <td class="p-2.5 text-right font-medium text-slate-700">{{ v.monto_total_lista | moneda }}</td>
+                            <td class="p-2.5 text-right text-emerald-700 font-medium">{{ v.total_intereses | moneda }}</td>
+                            <td class="p-2.5 text-right font-bold text-slate-900">{{ v.total_a_pagar | moneda }}</td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="6" class="p-4 text-center text-slate-400">No hay compras registradas en este corte.</td>
+                            <td colspan="6" class="p-4 text-center text-slate-400 font-sans">No hay compras registradas en este corte.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -105,44 +109,45 @@
         </div>
 
         <!-- Liquidación Financiera y Mora Diferenciada -->
-        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
-            <div class="flex justify-between text-xs text-slate-600">
-                <span>Subtotal Capital Compras a Fin de Mes:</span>
+        <div class="bg-slate-50 p-4 rounded-xs border border-slate-300 space-y-2.5 font-mono text-xs">
+            <div class="flex justify-between text-slate-700">
+                <span class="font-sans">Subtotal Capital Compras a Fin de Mes:</span>
                 <strong class="text-slate-900">{{ liq.subtotal_capital | moneda }}</strong>
             </div>
-            <div class="flex justify-between text-xs text-slate-600">
-                <span>Intereses Compensatorios Acumulados (Fecha compra &rarr; Fecha pactada):</span>
-                <strong class="text-emerald-600">+ {{ liq.total_interes_compensatorio | moneda }}</strong>
+            <div class="flex justify-between text-slate-700">
+                <span class="font-sans">Intereses Compensatorios Acumulados (Fecha compra &rarr; Fecha pactada):</span>
+                <strong class="text-emerald-700">+ {{ liq.total_interes_compensatorio | moneda }}</strong>
             </div>
 
             <!-- ÍTEM DIFERENCIADO DE MORA SEGÚN NUMERAL 6 DEL ENUNCIADO -->
             {% if dias_mora > 0 or liq.total_interes_mora > 0 %}
-            <div class="p-3 rounded-xl bg-red-100/70 border border-red-200 text-xs flex justify-between items-center text-rose-900 font-bold">
+            <div class="p-2.5 rounded-xs bg-red-50 border border-red-300 flex justify-between items-center text-red-900">
                 <div>
-                    <span class="flex items-center">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 mr-1 text-rose-600"></i>
+                    <span class="flex items-center font-bold font-sans">
+                        <i data-lucide="alert-triangle" class="w-3.5 h-3.5 mr-1 text-red-600"></i>
                         Intereses por mora ({{ dias_mora }} días transcurridos tras vencimiento)
                     </span>
-                    <span class="text-[10px] font-normal text-rose-700">Tasa Moratoria: {{ liq.tipo_tasa_mora }} {{ (liq.tasa_mora * 100) | round(2) }}%</span>
+                    <span class="text-[10px] text-red-700 block mt-0.5">Tasa Moratoria: {{ liq.tipo_tasa_mora }} {{ (liq.tasa_mora * 100) | round(2) }}%</span>
                 </div>
-                <span class="text-sm font-black text-rose-700">+ {{ (interes_mora if dias_mora > 0 else liq.total_interes_mora) | moneda }}</span>
+                <span class="text-sm font-bold text-red-700">+ {{ (interes_mora if dias_mora > 0 else liq.total_interes_mora) | moneda }}</span>
             </div>
             {% endif %}
 
-            <div class="pt-3 border-t border-slate-200 flex justify-between items-center">
+            <div class="pt-2.5 border-t border-slate-300 flex justify-between items-center">
                 <div>
-                    <div class="text-xs uppercase font-extrabold text-slate-500">Monto Total Exigible al Cliente:</div>
-                    <div class="text-[11px] text-slate-400">Pago íntegro sin abonos parciales según política del curso</div>
+                    <div class="text-[11px] uppercase font-bold text-slate-600 font-sans">Monto Total Exigible al Cliente:</div>
+                    <div class="text-[10px] text-slate-400 font-sans">Pago íntegro sin abonos parciales según política del curso</div>
                 </div>
-                <div class="text-2xl font-black text-brand-upc">
+                <div class="text-xl font-bold text-[#1a365d]">
                     {{ (total_con_mora if dias_mora > 0 else liq.total_exigible) | moneda }}
                 </div>
             </div>
         </div>
 
         <!-- Orden de Prelación Recordatorio -->
-        <div class="text-[11px] text-slate-500 bg-white p-3 rounded-xl border border-slate-200">
-            <strong>Orden legal de imputación (Anexo A):</strong> Al efectuarse el pago, el monto se imputará en orden riguroso: 1° Intereses por mora, 2° Interés compensatorio y 3° Capital.
+        <div class="text-[11px] text-slate-600 bg-slate-100 p-2.5 rounded-xs border border-slate-300 flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-slate-500 shrink-0"></i>
+            <span><strong>Orden legal de imputación (Anexo A):</strong> Al efectuarse el cobro, el monto se imputará en orden riguroso: 1° Intereses por mora, 2° Interés compensatorio y 3° Capital.</span>
         </div>
     </div>
 </div>

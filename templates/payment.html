@@ -1,34 +1,37 @@
 {% extends "base.html" %}
 
-{% block title %}Caja y Registro de Pagos{% endblock %}
+{% block title %}Caja y Registro de Pagos - Stonks{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-4">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-200">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-slate-300">
         <div>
-            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Caja y Cobranza de Cuentas Corrientes</h1>
-            <p class="text-sm text-slate-500 mt-1">Recepción de pagos con aplicación estricta de orden de prelación legal (Anexo A).</p>
+            <h1 class="text-xl font-bold text-slate-900 tracking-tight uppercase">Caja y Cobranza de Cuentas Corrientes</h1>
+            <p class="text-xs text-slate-500">Recepción de pagos con aplicación estricta de orden de prelación legal (Anexo A).</p>
         </div>
-        <div class="mt-3 sm:mt-0 inline-flex items-center text-xs bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-200 font-medium">
-            <i data-lucide="check-shield" class="w-4 h-4 mr-1.5 text-emerald-600"></i>
+        <div class="mt-2 sm:mt-0 inline-flex items-center text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-xs border border-slate-300 font-mono">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1.5 text-blue-700"></i>
             <span>Prelación: 1° Mora &bull; 2° Compensatorio &bull; 3° Capital</span>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
         
         <!-- Formulario de Cobro (5 cols) -->
-        <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-5">
-            <div class="border-b border-slate-100 pb-3">
-                <h2 class="text-base font-extrabold text-slate-900">Registrar Cobro en Ventanilla</h2>
-                <p class="text-xs text-slate-500 mt-0.5">Liquidación de listados de cobro pendientes.</p>
+        <div class="lg:col-span-5 card-bundlerock p-4 space-y-4">
+            <div class="border-b border-slate-200 pb-2">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center">
+                    <i data-lucide="circle-dollar-sign" class="w-3.5 h-3.5 mr-1.5 text-slate-600"></i>
+                    Registrar Cobro en Ventanilla
+                </h2>
+                <p class="text-[11px] text-slate-500 mt-0.5">Liquidación de listados de cobro pendientes por cliente.</p>
             </div>
 
-            <form action="{{ url_for('cobranzas') }}" method="POST" id="form-cobro" class="space-y-4">
+            <form action="{{ url_for('cobranzas') }}" method="POST" id="form-cobro" class="space-y-3">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Listado de Pago a Cancelar *</label>
-                    <select id="select-liq" name="liquidacion_id" required onchange="cargarLiquidacion()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold bg-white focus:ring-2 focus:ring-red-500">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Listado de Pago a Cancelar *</label>
+                    <select id="select-liq" name="liquidacion_id" required onchange="cargarLiquidacion()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-sans bg-white focus:outline-none focus:border-slate-500">
                         <option value="">-- Seleccione una cuenta por cobrar --</option>
                         {% for p in pendientes %}
                         <option value="{{ p.id }}"
@@ -46,84 +49,87 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Fecha Efectiva del Pago *</label>
-                    <input type="date" id="fecha-pago" name="fecha_pago" value="{{ now.strftime('%Y-%m-%d') }}" onchange="recalcularMora()" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                    <span class="text-[11px] text-slate-400 mt-0.5 block">Si la fecha es posterior a la fecha pactada, el sistema calcula mora automáticamente.</span>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Fecha Efectiva del Pago *</label>
+                    <input type="date" id="fecha-pago" name="fecha_pago" value="{{ now.strftime('%Y-%m-%d') }}" onchange="recalcularMora()" required class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono">
+                    <span class="text-[10px] text-slate-500 mt-0.5 block">Si la fecha es posterior a la pactada, el sistema calcula mora automáticamente.</span>
                 </div>
 
                 <!-- Detalle de Imputación Prelación Preview -->
-                <div id="panel-imputacion" class="hidden p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-                    <div class="text-xs font-bold text-slate-800 uppercase tracking-wider">Desglose de Imputación de Pago</div>
+                <div id="panel-imputacion" class="hidden p-3 rounded-xs bg-slate-50 border border-slate-300 space-y-2 font-mono text-xs">
+                    <div class="text-[10px] font-bold text-slate-700 uppercase tracking-wider font-sans border-b border-slate-200 pb-1 flex items-center justify-between">
+                        <span>Desglose de Imputación Legal</span>
+                        <span class="text-[9px] text-blue-700">Base 360</span>
+                    </div>
                     
-                    <div class="space-y-1.5 text-xs">
-                        <div class="flex justify-between text-rose-700">
-                            <span>1° Intereses por Mora (<span id="txt-dias-mora">0</span> días):</span>
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-red-700">
+                            <span class="font-sans">1° Intereses por Mora (<span id="txt-dias-mora">0</span> días):</span>
                             <strong id="prev-mora">S/ 0.00</strong>
                         </div>
                         <div class="flex justify-between text-emerald-700">
-                            <span>2° Interés Compensatorio:</span>
+                            <span class="font-sans">2° Interés Compensatorio:</span>
                             <strong id="prev-comp">S/ 0.00</strong>
                         </div>
                         <div class="flex justify-between text-slate-700">
-                            <span>3° Amortización de Capital:</span>
+                            <span class="font-sans">3° Amortización de Capital:</span>
                             <strong id="prev-cap">S/ 0.00</strong>
                         </div>
                     </div>
 
-                    <div class="pt-2 border-t border-slate-200 flex justify-between items-center">
-                        <span class="font-extrabold text-slate-900 text-xs">Total Exigible Liquidado:</span>
-                        <span id="prev-total" class="text-lg font-black text-brand-upc">S/ 0.00</span>
+                    <div class="pt-2 border-t border-slate-300 flex justify-between items-center">
+                        <span class="font-bold text-slate-900 text-xs font-sans">Total Exigible Liquidado:</span>
+                        <span id="prev-total" class="text-base font-bold text-[#1a365d]">S/ 0.00</span>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Monto a Cobrar (S/) *</label>
-                    <input type="number" step="0.01" id="monto-pagado" name="monto_pagado" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-base font-black text-slate-900">
-                    <span class="text-[11px] text-rose-600 font-semibold mt-1 block">Regla: No se admiten pagos parciales. El monto debe ser el total exigible.</span>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Monto a Cobrar (S/) *</label>
+                    <input type="number" step="0.01" id="monto-pagado" name="monto_pagado" required class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-sm font-mono font-bold text-slate-900 focus:outline-none focus:border-slate-500">
+                    <span class="text-[10px] text-red-700 font-semibold mt-1 block">Regla: No se admiten pagos parciales. El monto debe ser exactamente el total exigible.</span>
                 </div>
 
-                <button type="submit" id="btn-cobrar" disabled class="w-full py-3.5 bg-emerald-600 text-white font-extrabold rounded-xl shadow-lg hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
-                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                <button type="submit" id="btn-cobrar" disabled class="btn-win32 btn-win32-primary w-full justify-center py-2 text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i data-lucide="check" class="w-4 h-4 mr-1"></i>
                     <span>Efectuar Cobranza e Imputar Pago</span>
                 </button>
             </form>
         </div>
 
         <!-- Historial de Pagos y Comprobantes Recientes (7 cols) -->
-        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h2 class="text-base font-extrabold text-slate-900">Últimos Recibos de Pago Emitidos</h2>
-                <span class="text-xs text-slate-500 font-medium">Historial de caja</span>
+        <div class="lg:col-span-7 card-bundlerock overflow-hidden flex flex-col">
+            <div class="card-header-bundlerock flex justify-between items-center">
+                <span>Comprobantes de Pago Emitidos en Caja</span>
+                <span class="text-[10px] font-mono text-slate-400">Total: {{ pagos | length }}</span>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                    <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-300 font-mono uppercase tracking-wider">
                         <tr>
-                            <th class="p-3">Recibo / Fecha</th>
-                            <th class="p-3">Cliente</th>
-                            <th class="p-3 text-right">Mora</th>
-                            <th class="p-3 text-right">Interés</th>
-                            <th class="p-3 text-right">Capital</th>
-                            <th class="p-3 text-right">Total Pagado</th>
+                            <th class="px-3 py-2">Recibo / Fecha</th>
+                            <th class="px-3 py-2">Cliente</th>
+                            <th class="px-3 py-2 text-right">Mora</th>
+                            <th class="px-3 py-2 text-right">Interés</th>
+                            <th class="px-3 py-2 text-right">Capital</th>
+                            <th class="px-3 py-2 text-right">Total Pagado</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100">
+                    <tbody class="divide-y divide-slate-200 font-mono">
                         {% for pg in pagos %}
-                        <tr class="hover:bg-slate-50">
-                            <td class="p-3">
-                                <span class="font-mono font-bold text-slate-900">{{ pg.num_comprobante }}</span>
-                                <div class="text-[11px] text-slate-400">{{ pg.fecha_pago }}</div>
+                        <tr class="hover:bg-blue-50/40">
+                            <td class="px-3 py-2">
+                                <span class="font-bold text-slate-900">{{ pg.num_comprobante }}</span>
+                                <div class="text-[10px] text-slate-400">{{ pg.fecha_pago }}</div>
                             </td>
-                            <td class="p-3 font-semibold text-slate-800">{{ pg.cliente_nombre }}</td>
-                            <td class="p-3 text-right text-rose-600 font-bold">{{ pg.abono_mora | moneda }}</td>
-                            <td class="p-3 text-right text-emerald-600 font-bold">{{ pg.abono_compensatorio | moneda }}</td>
-                            <td class="p-3 text-right text-slate-700 font-bold">{{ pg.abono_capital | moneda }}</td>
-                            <td class="p-3 text-right font-black text-slate-900 text-sm">{{ pg.monto_total_pagado | moneda }}</td>
+                            <td class="px-3 py-2 font-sans font-bold text-slate-800">{{ pg.cliente_nombre }}</td>
+                            <td class="px-3 py-2 text-right text-red-700 font-bold">{{ pg.abono_mora | moneda }}</td>
+                            <td class="px-3 py-2 text-right text-emerald-700 font-bold">{{ pg.abono_compensatorio | moneda }}</td>
+                            <td class="px-3 py-2 text-right text-slate-700">{{ pg.abono_capital | moneda }}</td>
+                            <td class="px-3 py-2 text-right font-bold text-slate-900">{{ pg.monto_total_pagado | moneda }}</td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="6" class="p-8 text-center text-slate-400">No se han registrado pagos en caja todavía.</td>
+                            <td colspan="6" class="px-3 py-6 text-center text-slate-400 font-sans">No se han registrado cobros en caja todavía.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

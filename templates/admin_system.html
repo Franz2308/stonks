@@ -1,129 +1,129 @@
 {% extends "base.html" %}
 
-{% block title %}Panel Administrador del Sistema{% endblock %}
+{% block title %}Panel Administrador del Sistema - Stonks{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-4">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-200">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-slate-300">
         <div>
-            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Administración Global de Plataforma</h1>
-            <p class="text-sm text-slate-500 mt-1">Gestión multitienda, control de altas/bajas de comercios y métricas agregadas.</p>
+            <h1 class="text-xl font-bold text-slate-900 tracking-tight uppercase">Administración Global de Plataforma</h1>
+            <p class="text-xs text-slate-500">Gestión multitienda, control de altas/bajas de comercios y métricas agregadas.</p>
         </div>
-        <button onclick="document.getElementById('modal-nueva-tienda').classList.remove('hidden')" class="mt-3 sm:mt-0 inline-flex items-center px-4 py-2.5 bg-brand-upc text-white font-bold rounded-xl shadow hover:bg-red-700 transition">
-            <i data-lucide="plus-circle" class="w-5 h-5 mr-2"></i>
+        <button onclick="document.getElementById('modal-nueva-tienda').classList.remove('hidden')" class="btn-win32 btn-win32-primary mt-2 sm:mt-0">
+            <i data-lucide="plus" class="w-3.5 h-3.5 mr-1"></i>
             <span>Dar de Alta Nueva Tienda</span>
         </button>
     </div>
 
-    <!-- KPIs -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-            <div class="p-3 bg-red-50 text-brand-upc rounded-xl">
-                <i data-lucide="store" class="w-6 h-6"></i>
+    <!-- KPIs (High Information Density) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="card-bundlerock p-3 flex items-center space-x-3">
+            <div class="p-2 bg-slate-100 border border-slate-300 rounded-xs text-[#1a365d]">
+                <i data-lucide="store" class="w-5 h-5"></i>
             </div>
             <div>
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Tiendas</p>
-                <h3 class="text-2xl font-black text-slate-800">{{ stats.total_tiendas }}</h3>
-                <span class="text-xs text-emerald-600 font-medium">{{ stats.tiendas_activas }} activas</span>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">Total Tiendas</p>
+                <h3 class="text-lg font-bold text-slate-900 font-mono">{{ stats.total_tiendas }}</h3>
+                <span class="text-[10px] text-emerald-700 font-mono">{{ stats.tiendas_activas }} activas</span>
             </div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-            <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                <i data-lucide="users" class="w-6 h-6"></i>
+        <div class="card-bundlerock p-3 flex items-center space-x-3">
+            <div class="p-2 bg-slate-100 border border-slate-300 rounded-xs text-blue-700">
+                <i data-lucide="users" class="w-5 h-5"></i>
             </div>
             <div>
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Clientes Totales</p>
-                <h3 class="text-2xl font-black text-slate-800">{{ stats.total_clientes }}</h3>
-                <span class="text-xs text-slate-500 font-medium">Vecinos atendidos</span>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">Clientes Totales</p>
+                <h3 class="text-lg font-bold text-slate-900 font-mono">{{ stats.total_clientes }}</h3>
+                <span class="text-[10px] text-slate-500 font-sans">Vecinos registrados</span>
             </div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-            <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-                <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+        <div class="card-bundlerock p-3 flex items-center space-x-3">
+            <div class="p-2 bg-slate-100 border border-slate-300 rounded-xs text-emerald-700">
+                <i data-lucide="dollar-sign" class="w-5 h-5"></i>
             </div>
             <div>
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Volumen Crédito</p>
-                <h3 class="text-2xl font-black text-slate-800">{{ stats.volumen_total | moneda }}</h3>
-                <span class="text-xs text-emerald-600 font-medium">Financiamiento otorgado</span>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">Volumen Crédito</p>
+                <h3 class="text-lg font-bold text-slate-900 font-mono">{{ stats.volumen_total | moneda }}</h3>
+                <span class="text-[10px] text-emerald-700 font-sans">Financiamiento total</span>
             </div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-            <div class="p-3 bg-purple-50 text-purple-600 rounded-xl">
-                <i data-lucide="shield-check" class="w-6 h-6"></i>
+        <div class="card-bundlerock p-3 flex items-center space-x-3">
+            <div class="p-2 bg-slate-100 border border-slate-300 rounded-xs text-purple-700">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
             </div>
             <div>
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Modelo Multitienda</p>
-                <h3 class="text-2xl font-black text-slate-800">100%</h3>
-                <span class="text-xs text-purple-600 font-medium">Aislamiento por comercio</span>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">Modelo Multitienda</p>
+                <h3 class="text-lg font-bold text-slate-900 font-mono">100%</h3>
+                <span class="text-[10px] text-purple-800 font-sans">Aislamiento de datos</span>
             </div>
         </div>
     </div>
 
     <!-- Lista de Tiendas -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-5 border-b border-slate-200 flex justify-between items-center">
-            <h2 class="text-base font-bold text-slate-800">Comercios Registrados en la Plataforma</h2>
-            <span class="text-xs text-slate-500">{{ tiendas | length }} comercios registrados</span>
+    <div class="card-bundlerock overflow-hidden">
+        <div class="card-header-bundlerock flex justify-between items-center">
+            <span>Comercios Registrados en la Plataforma</span>
+            <span class="text-[10px] font-mono text-slate-400">Total: {{ tiendas | length }}</span>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-                <thead class="bg-slate-50 text-slate-600 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-slate-100 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-300 font-mono">
                     <tr>
-                        <th class="px-5 py-3.5">Tienda / Giro</th>
-                        <th class="px-5 py-3.5">RUC / Razón Social</th>
-                        <th class="px-5 py-3.5">Administrador Asignado</th>
-                        <th class="px-5 py-3.5">Zona de Influencia</th>
-                        <th class="px-5 py-3.5 text-center">Clientes / Ventas</th>
-                        <th class="px-5 py-3.5 text-center">Estado</th>
-                        <th class="px-5 py-3.5 text-right">Acción</th>
+                        <th class="px-3 py-2">Tienda / Giro</th>
+                        <th class="px-3 py-2">RUC / Razón Social</th>
+                        <th class="px-3 py-2">Administrador Asignado</th>
+                        <th class="px-3 py-2">Zona de Influencia</th>
+                        <th class="px-3 py-2 text-center">Clientes / Ventas</th>
+                        <th class="px-3 py-2 text-center">Estado</th>
+                        <th class="px-3 py-2 text-right">Acción</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-slate-200 font-mono">
                     {% for t in tiendas %}
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="px-5 py-4">
+                    <tr class="hover:bg-blue-50/40">
+                        <td class="px-3 py-2 font-sans">
                             <div class="font-bold text-slate-900">{{ t.nombre_comercial }}</div>
-                            <span class="inline-block mt-0.5 text-xs bg-red-50 text-brand-upc font-semibold px-2 py-0.5 rounded">
+                            <span class="inline-block mt-0.5 text-[10px] border border-blue-200 bg-blue-50 text-blue-800 font-semibold px-1.5 py-0.2 rounded-xs">
                                 {{ t.giro }}
                             </span>
                         </td>
-                        <td class="px-5 py-4">
-                            <div class="font-mono text-xs font-bold text-slate-800">{{ t.ruc }}</div>
-                            <div class="text-xs text-slate-500">{{ t.razon_social }}</div>
+                        <td class="px-3 py-2">
+                            <div class="font-bold text-slate-900">{{ t.ruc }}</div>
+                            <div class="text-[11px] text-slate-500 font-sans">{{ t.razon_social }}</div>
                         </td>
-                        <td class="px-5 py-4">
-                            <div class="font-medium text-slate-800">{{ t.admin_nombre }}</div>
-                            <div class="text-xs text-slate-500">{{ t.admin_email }}</div>
+                        <td class="px-3 py-2 font-sans">
+                            <div class="font-semibold text-slate-800">{{ t.admin_nombre }}</div>
+                            <div class="text-[10px] text-slate-500 font-mono">{{ t.admin_email }}</div>
                         </td>
-                        <td class="px-5 py-4 text-xs text-slate-600 max-w-xs truncate" title="{{ t.direccion }}">
+                        <td class="px-3 py-2 text-[11px] text-slate-600 font-sans max-w-xs truncate" title="{{ t.direccion }}">
                             {{ t.direccion }}
                         </td>
-                        <td class="px-5 py-4 text-center">
-                            <span class="font-bold text-slate-800">{{ t.total_clientes }}</span> cli /
-                            <span class="font-bold text-slate-800">{{ t.total_ventas }}</span> vtas
+                        <td class="px-3 py-2 text-center">
+                            <span class="font-bold text-slate-900">{{ t.total_clientes }}</span> cli /
+                            <span class="font-bold text-slate-900">{{ t.total_ventas }}</span> vtas
                         </td>
-                        <td class="px-5 py-4 text-center">
+                        <td class="px-3 py-2 text-center font-sans">
                             {% if t.activa == 1 %}
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                            <span class="px-1.5 py-0.5 border border-emerald-300 bg-emerald-50 text-emerald-800 text-[10px] font-bold">
                                 Activa
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600">
+                            <span class="px-1.5 py-0.5 border border-slate-300 bg-slate-100 text-slate-600 text-[10px] font-bold">
                                 Inactiva (Baja)
                             </span>
                             {% endif %}
                         </td>
-                        <td class="px-5 py-4 text-right">
+                        <td class="px-3 py-2 text-right">
                             <a href="{{ url_for('admin_tienda_toggle', tienda_id=t.id) }}"
-                               class="inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-lg border transition {{ 'border-rose-200 text-rose-600 hover:bg-rose-50' if t.activa == 1 else 'border-emerald-200 text-emerald-600 hover:bg-emerald-50' }}">
+                               class="btn-win32 {{ 'text-red-700' if t.activa == 1 else 'text-emerald-700' }}">
                                 {% if t.activa == 1 %}
-                                <i data-lucide="power-off" class="w-3.5 h-3.5 mr-1"></i> Dar de Baja
+                                <i data-lucide="power-off" class="w-3.5 h-3.5 mr-1 text-red-600"></i> Dar de Baja
                                 {% else %}
-                                <i data-lucide="power" class="w-3.5 h-3.5 mr-1"></i> Reactivar
+                                <i data-lucide="power" class="w-3.5 h-3.5 mr-1 text-emerald-600"></i> Reactivar
                                 {% endif %}
                             </a>
                         </td>
@@ -135,57 +135,57 @@
     </div>
 </div>
 
-<!-- Modal Nueva Tienda -->
-<div id="modal-nueva-tienda" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
-        <div class="flex justify-between items-center pb-3 border-b border-slate-200">
-            <h3 class="text-lg font-black text-slate-800">Alta de Nueva Tienda Comercial</h3>
-            <button onclick="document.getElementById('modal-nueva-tienda').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-                <i data-lucide="x" class="w-5 h-5"></i>
+<!-- Modal Nueva Tienda (Aesthetic Win32 Dialog) -->
+<div id="modal-nueva-tienda" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="card-bundlerock max-w-xl w-full p-0 shadow-lg max-h-[90vh] overflow-y-auto">
+        <div class="card-header-bundlerock flex justify-between items-center bg-[#1a365d] text-white py-2 px-3">
+            <span class="font-bold uppercase tracking-wider text-xs">Alta de Nueva Tienda Comercial</span>
+            <button onclick="document.getElementById('modal-nueva-tienda').classList.add('hidden')" class="text-slate-300 hover:text-white">
+                <i data-lucide="x" class="w-4 h-4"></i>
             </button>
         </div>
 
-        <form action="{{ url_for('admin_tienda_alta') }}" method="POST" class="mt-4 space-y-4">
-            <div class="bg-red-50 p-3 rounded-xl border border-red-100">
-                <p class="text-xs font-bold text-brand-upc uppercase tracking-wider">Datos del Administrador de la Tienda</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+        <form action="{{ url_for('admin_tienda_alta') }}" method="POST" class="p-4 space-y-3">
+            <div class="bg-slate-50 p-2.5 rounded-xs border border-slate-300">
+                <p class="text-[10px] font-bold text-slate-700 uppercase tracking-wider font-mono">Datos del Administrador de la Tienda</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Nombre Completo *</label>
-                        <input type="text" name="nombre_admin" required placeholder="Carlos Vega" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">Nombre Completo *</label>
+                        <input type="text" name="nombre_admin" required placeholder="Carlos Vega" class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Correo Electrónico *</label>
-                        <input type="email" name="email_admin" required placeholder="carlos@mitienda.pe" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">Correo Electrónico *</label>
+                        <input type="email" name="email_admin" required placeholder="carlos@mitienda.pe" class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Nombre de Usuario *</label>
-                        <input type="text" name="username" required placeholder="tienda_carlos" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">Nombre de Usuario *</label>
+                        <input type="text" name="username" required placeholder="tienda_carlos" class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Contraseña *</label>
-                        <input type="password" name="password" required placeholder="••••••••" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">Contraseña *</label>
+                        <input type="password" name="password" required placeholder="••••••••" class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs">
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-3">
-                <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Información del Establecimiento</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="space-y-2">
+                <p class="text-[10px] font-bold text-slate-700 uppercase tracking-wider font-mono">Información del Establecimiento</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Nombre Comercial *</label>
-                        <input type="text" name="nombre_comercial" required placeholder="Carnicería El Buen Corte" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">Nombre Comercial *</label>
+                        <input type="text" name="nombre_comercial" required placeholder="Carnicería El Buen Corte" class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">RUC (11 dígitos) *</label>
-                        <input type="text" name="ruc" maxlength="11" required placeholder="10458923412" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">RUC (11 dígitos) *</label>
+                        <input type="text" name="ruc" maxlength="11" required placeholder="10458923412" class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Razón Social *</label>
-                        <input type="text" name="razon_social" required placeholder="El Buen Corte E.I.R.L." class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">Razón Social *</label>
+                        <input type="text" name="razon_social" required placeholder="El Buen Corte E.I.R.L." class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Giro Comercial *</label>
-                        <select name="giro" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">Giro Comercial *</label>
+                        <select name="giro" class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs bg-white">
                             <option value="Bodega">Bodega / Minimarket</option>
                             <option value="Carnicería">Carnicería</option>
                             <option value="Panadería">Panadería / Pastelería</option>
@@ -201,21 +201,22 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Teléfono / WhatsApp *</label>
-                        <input type="text" name="telefono" required placeholder="987654321" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">Teléfono / WhatsApp *</label>
+                        <input type="text" name="telefono" required placeholder="987654321" class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Dirección (Zona de Influencia) *</label>
-                        <input type="text" name="direccion" required placeholder="Mercado Central Puesto 45, San Miguel" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-[11px] font-medium text-slate-700 mb-0.5">Dirección (Zona de Influencia) *</label>
+                        <input type="text" name="direccion" required placeholder="Mercado Central Puesto 45, San Miguel" class="w-full px-2 py-1 rounded-xs border border-slate-300 text-xs">
                     </div>
                 </div>
             </div>
 
-            <div class="flex justify-end space-x-3 pt-4 border-t border-slate-200">
-                <button type="button" onclick="document.getElementById('modal-nueva-tienda').classList.add('hidden')" class="px-4 py-2 border border-slate-300 rounded-xl text-slate-700 text-sm font-medium hover:bg-slate-50">
+            <div class="flex justify-end space-x-2 pt-3 border-t border-slate-300">
+                <button type="button" onclick="document.getElementById('modal-nueva-tienda').classList.add('hidden')" class="btn-win32">
                     Cancelar
                 </button>
-                <button type="submit" class="px-5 py-2 bg-brand-upc text-white rounded-xl text-sm font-bold shadow hover:bg-red-700">
+                <button type="submit" class="btn-win32 btn-win32-primary">
+                    <i data-lucide="check" class="w-3.5 h-3.5 mr-1"></i>
                     Guardar y Registrar Tienda
                 </button>
             </div>

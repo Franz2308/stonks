@@ -1,115 +1,120 @@
 {% extends "base.html" %}
 
-{% block title %}Simulador y Calculadora Financiera{% endblock %}
+{% block title %}Simulador y Calculadora Financiera - Stonks{% endblock %}
 
 {% block content %}
-<div class="space-y-6 max-w-5xl mx-auto">
+<div class="space-y-4 max-w-5xl mx-auto">
     <!-- Header -->
-    <div class="pb-4 border-b border-slate-200">
-        <h1 class="text-2xl font-black text-slate-900 tracking-tight">Simulador y Motor Matemático-Financiero</h1>
-        <p class="text-sm text-slate-500 mt-1">Herramienta interactiva para verificar conversiones de tasas, cronogramas franceses con gracia y cálculo de mora (Anexo A).</p>
+    <div class="pb-3 border-b border-slate-300">
+        <h1 class="text-xl font-bold text-slate-900 tracking-tight uppercase">Simulador y Motor Matemático-Financiero</h1>
+        <p class="text-xs text-slate-500">Herramienta técnica para verificar conversiones de tasas, cronogramas franceses con gracia y cálculo de mora (Anexo A).</p>
     </div>
 
-    <!-- Pestañas de Simulación -->
-    <div class="flex border-b border-slate-200 space-x-4">
-        <button type="button" onclick="mostrarSimulador('frances')" id="tab-frances" class="pb-3 text-sm font-bold border-b-2 border-brand-upc text-brand-upc transition flex items-center gap-1.5">
-            <i data-lucide="layers" class="w-4 h-4"></i> Método Francés con Gracia Total
+    <!-- Pestañas de Simulación (Aesthetic Win32 Workstation) -->
+    <div class="flex border-b border-slate-300 space-x-2">
+        <button type="button" onclick="mostrarSimulador('frances')" id="tab-frances" class="pb-2 px-3 text-xs font-bold border-b-2 border-[#1a365d] text-[#1a365d] transition flex items-center gap-1.5 uppercase tracking-wider">
+            <i data-lucide="layers" class="w-3.5 h-3.5"></i> Método Francés con Gracia Total
         </button>
-        <button type="button" onclick="mostrarSimulador('tasas')" id="tab-tasas" class="pb-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5">
-            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Conversión de Tasas (TEA / TNA / TEM / TED)
+        <button type="button" onclick="mostrarSimulador('tasas')" id="tab-tasas" class="pb-2 px-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5 uppercase tracking-wider">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Conversión de Tasas (TEA / TNA / TEM / TED)
         </button>
-        <button type="button" onclick="mostrarSimulador('findemes')" id="tab-findemes" class="pb-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5">
-            <i data-lucide="calendar" class="w-4 h-4"></i> Compras Fin de Mes y Mora
+        <button type="button" onclick="mostrarSimulador('findemes')" id="tab-findemes" class="pb-2 px-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5 uppercase tracking-wider">
+            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Compras Fin de Mes y Mora
         </button>
     </div>
 
     <!-- 1. SIMULADOR MÉTODO FRANCÉS -->
-    <div id="sim-frances" class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-            <div class="md:col-span-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Parámetros del Préstamo</h3>
+    <div id="sim-frances" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div class="md:col-span-4 card-bundlerock p-4 space-y-3">
+                <div class="card-header-bundlerock -m-4 mb-3 border-b">
+                    <span>Parámetros del Préstamo</span>
+                </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Monto de la Compra (S/)</label>
-                    <input type="number" id="sf-capital" value="300.0" step="10" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-bold">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Monto de la Compra (S/)</label>
+                    <input type="number" id="sf-capital" value="300.0" step="10" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono font-bold">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Fecha Compra</label>
-                        <input type="date" id="sf-fcompra" value="2026-09-15" class="w-full px-2 py-1.5 rounded-lg border border-slate-300 text-xs">
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Fecha Compra</label>
+                        <input type="date" id="sf-fcompra" value="2026-09-15" class="w-full px-2 py-1.5 rounded-xs border border-slate-300 text-xs font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">1° Fecha Pago</label>
-                        <input type="date" id="sf-fpago" value="2026-09-26" class="w-full px-2 py-1.5 rounded-lg border border-slate-300 text-xs font-bold text-brand-upc">
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">1° Fecha Pago</label>
+                        <input type="date" id="sf-fpago" value="2026-09-26" class="w-full px-2 py-1.5 rounded-xs border border-slate-300 text-xs font-mono font-bold text-blue-700">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Plazo (Cuotas Mensuales)</label>
-                    <input type="number" id="sf-cuotas" value="3" min="1" max="24" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-bold">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Plazo (Cuotas Mensuales)</label>
+                    <input type="number" id="sf-cuotas" value="3" min="1" max="24" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono font-bold">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Tipo Tasa</label>
-                        <select id="sf-tipo-tasa" class="w-full px-2 py-2 rounded-lg border border-slate-300 text-xs bg-white">
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Tipo Tasa</label>
+                        <select id="sf-tipo-tasa" class="w-full px-2 py-1.5 rounded-xs border border-slate-300 text-xs bg-white font-sans">
                             <option value="TEA">TEA (Efectiva)</option>
                             <option value="TNA">TNA (Nominal)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Tasa Anual (%)</label>
-                        <input type="number" id="sf-tasa-val" value="24.0" step="0.1" class="w-full px-2 py-2 rounded-lg border border-slate-300 text-xs font-bold">
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Tasa Anual (%)</label>
+                        <input type="number" id="sf-tasa-val" value="24.0" step="0.1" class="w-full px-2 py-1.5 rounded-xs border border-slate-300 text-xs font-mono font-bold">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">COK Comercio Anual (%)</label>
-                    <input type="number" id="sf-cok" value="15.0" step="0.1" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">COK Comercio Anual (%)</label>
+                    <input type="number" id="sf-cok" value="15.0" step="0.1" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono">
                 </div>
-                <button type="button" onclick="ejecutarSimulacionFrances()" class="w-full py-2.5 bg-brand-upc text-white font-bold rounded-xl text-sm shadow hover:bg-red-700 transition">
-                    Calcular Amortización Francesa
+                <button type="button" onclick="ejecutarSimulacionFrances()" class="btn-win32 btn-win32-primary w-full justify-center py-2 text-xs font-bold">
+                    <i data-lucide="calculator" class="w-3.5 h-3.5 mr-1"></i>
+                    <span>Calcular Amortización Francesa</span>
                 </button>
             </div>
 
             <!-- Resultados -->
-            <div class="md:col-span-8 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Métricas e Indicadores Financieros</h3>
+            <div class="md:col-span-8 card-bundlerock p-4 space-y-3">
+                <div class="card-header-bundlerock -m-4 mb-3 border-b">
+                    <span>Métricas e Indicadores Financieros</span>
+                </div>
                 
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
-                        <span class="text-[10px] font-bold uppercase text-slate-400">Días Gracia Total</span>
-                        <div id="res-dias-gracia" class="text-lg font-black text-purple-700">11 días</div>
-                        <span id="res-int-gracia" class="text-[11px] text-slate-500 font-semibold">+ S/ 1.98</span>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <div class="bg-slate-50 p-2.5 rounded-xs border border-slate-300 text-center font-mono">
+                        <span class="text-[9px] font-bold uppercase text-slate-500 font-sans block">Días Gracia Total</span>
+                        <div id="res-dias-gracia" class="text-base font-bold text-purple-800">11 días</div>
+                        <span id="res-int-gracia" class="text-[10px] text-slate-500 font-semibold block">+ S/ 1.98</span>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
-                        <span class="text-[10px] font-bold uppercase text-slate-400">Capital Capitalizado</span>
-                        <div id="res-cap-cap" class="text-lg font-black text-slate-900">S/ 301.98</div>
-                        <span class="text-[11px] text-slate-400">Base para cuota</span>
+                    <div class="bg-slate-50 p-2.5 rounded-xs border border-slate-300 text-center font-mono">
+                        <span class="text-[9px] font-bold uppercase text-slate-500 font-sans block">Capital Cap.</span>
+                        <div id="res-cap-cap" class="text-base font-bold text-slate-900">S/ 301.98</div>
+                        <span class="text-[10px] text-slate-400 block">Base cuota</span>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
-                        <span class="text-[10px] font-bold uppercase text-slate-400">Cuota Fija (C)</span>
-                        <div id="res-cuota-fija" class="text-lg font-black text-brand-upc">S/ 104.32</div>
-                        <span class="text-[11px] text-slate-400">Cada 30 días</span>
+                    <div class="bg-slate-50 p-2.5 rounded-xs border border-slate-300 text-center font-mono">
+                        <span class="text-[9px] font-bold uppercase text-slate-500 font-sans block">Cuota Fija (C)</span>
+                        <div id="res-cuota-fija" class="text-base font-bold text-blue-700">S/ 104.32</div>
+                        <span class="text-[10px] text-slate-400 block">Cada 30 días</span>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
-                        <span class="text-[10px] font-bold uppercase text-slate-400">TIR Anual / VAN</span>
-                        <div id="res-tir" class="text-base font-black text-emerald-600">29.00%</div>
-                        <span id="res-van" class="text-[11px] text-emerald-700 font-semibold">VAN: S/ 5.77</span>
+                    <div class="bg-slate-50 p-2.5 rounded-xs border border-slate-300 text-center font-mono">
+                        <span class="text-[9px] font-bold uppercase text-slate-500 font-sans block">TIR Anual / VAN</span>
+                        <div id="res-tir" class="text-sm font-bold text-emerald-700">29.00%</div>
+                        <span id="res-van" class="text-[10px] text-emerald-800 font-semibold block">VAN: S/ 5.77</span>
                     </div>
                 </div>
 
                 <!-- Tabla Cronograma -->
-                <div class="border border-slate-200 rounded-xl overflow-hidden mt-4">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                <div class="border border-slate-300 rounded-xs overflow-hidden mt-3">
+                    <table class="w-full text-left text-xs font-mono">
+                        <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-300 uppercase tracking-wider">
                             <tr>
-                                <th class="p-2.5">Cuota</th>
-                                <th class="p-2.5">Vencimiento</th>
-                                <th class="p-2.5 text-right">Saldo Inicial</th>
-                                <th class="p-2.5 text-right">Cuota Mensual</th>
-                                <th class="p-2.5 text-right">Amortización</th>
-                                <th class="p-2.5 text-right">Interés Comp.</th>
-                                <th class="p-2.5 text-right">Saldo Final</th>
+                                <th class="p-2">Cuota</th>
+                                <th class="p-2">Vencimiento</th>
+                                <th class="p-2 text-right">Saldo Inicial</th>
+                                <th class="p-2 text-right">Cuota Mensual</th>
+                                <th class="p-2 text-right">Amortización</th>
+                                <th class="p-2 text-right">Interés Comp.</th>
+                                <th class="p-2 text-right">Saldo Final</th>
                             </tr>
                         </thead>
-                        <tbody id="sf-tabla-body" class="divide-y divide-slate-100 font-mono">
+                        <tbody id="sf-tabla-body" class="divide-y divide-slate-200">
                         </tbody>
                     </table>
                 </div>
@@ -118,102 +123,106 @@
     </div>
 
     <!-- 2. CONVERSOR DE TASAS -->
-    <div id="sim-tasas" class="hidden space-y-6">
-        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm max-w-2xl mx-auto space-y-5">
-            <h3 class="text-base font-extrabold text-slate-900">Conversión de Tasas (Base Anual 360 Días)</h3>
-            <p class="text-xs text-slate-500">Convierte de forma explícita entre TEA, TNA (con capitalización), TEM y TED con al menos 7 decimales de precisión según el Anexo A.</p>
+    <div id="sim-tasas" class="hidden space-y-4">
+        <div class="card-bundlerock p-4 max-w-2xl mx-auto space-y-4">
+            <div class="card-header-bundlerock -m-4 mb-2 border-b">
+                <span>Conversión de Tasas (Base Anual 360 Días)</span>
+            </div>
+            <p class="text-xs text-slate-500">Convierte de forma explícita entre TEA, TNA (con régimen de capitalización diaria o mensual), TEM y TED con al menos 7 decimales de precisión según el Anexo A.</p>
             
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Régimen de Tasa *</label>
-                    <select id="st-tipo" onchange="convertirTasas()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Régimen de Tasa *</label>
+                    <select id="st-tipo" onchange="convertirTasas()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs bg-white font-sans">
                         <option value="TEA">TEA (Efectiva Anual)</option>
                         <option value="TNA">TNA (Nominal Anual)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Valor Anual (%) *</label>
-                    <input type="number" id="st-valor" value="24.0" step="0.0001" onchange="convertirTasas()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-bold">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Valor Anual (%) *</label>
+                    <input type="number" id="st-valor" value="24.0" step="0.0001" onchange="convertirTasas()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono font-bold">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Cap. si es TNA</label>
-                    <select id="st-cap" onchange="convertirTasas()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white">
-                        <option value="Diaria">Diaria (360)</option>
-                        <option value="Mensual">Mensual (12)</option>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Cap. si es TNA</label>
+                    <select id="st-cap" onchange="convertirTasas()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs bg-white font-sans">
+                        <option value="Diaria">Diaria (m = 360)</option>
+                        <option value="Mensual">Mensual (m = 12)</option>
                     </select>
                 </div>
             </div>
 
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 font-mono text-sm">
+            <div class="p-4 rounded-xs bg-slate-50 border border-slate-300 space-y-2.5 font-mono text-xs">
                 <div class="flex justify-between border-b border-slate-200 pb-2">
-                    <span class="font-sans text-xs text-slate-500 font-bold">Tasa Efectiva Diaria (TED):</span>
-                    <strong id="st-ted" class="text-slate-800">0.059808%</strong>
+                    <span class="font-sans text-[11px] text-slate-600 font-bold uppercase">Tasa Efectiva Diaria (TED):</span>
+                    <strong id="st-ted" class="text-slate-900">0.059808%</strong>
                 </div>
                 <div class="flex justify-between border-b border-slate-200 pb-2">
-                    <span class="font-sans text-xs text-slate-500 font-bold">Tasa Efectiva Mensual (TEM, 30 días):</span>
-                    <strong id="st-tem" class="text-brand-upc font-black">1.8087%</strong>
+                    <span class="font-sans text-[11px] text-slate-600 font-bold uppercase">Tasa Efectiva Mensual (TEM, 30 días):</span>
+                    <strong id="st-tem" class="text-blue-700 font-bold">1.8087%</strong>
                 </div>
                 <div class="flex justify-between">
-                    <span class="font-sans text-xs text-slate-500 font-bold">TEA Equivalente Resultante:</span>
-                    <strong id="st-tea" class="text-emerald-600 font-black">24.0000%</strong>
+                    <span class="font-sans text-[11px] text-slate-600 font-bold uppercase">TEA Equivalente Resultante:</span>
+                    <strong id="st-tea" class="text-emerald-700 font-bold">24.0000%</strong>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- 3. COMPRAS FIN DE MES Y MORA -->
-    <div id="sim-findemes" class="hidden space-y-6">
-        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm max-w-2xl mx-auto space-y-5">
-            <h3 class="text-base font-extrabold text-slate-900">Simulador de Compras a Fin de Mes y Mora</h3>
+    <div id="sim-findemes" class="hidden space-y-4">
+        <div class="card-bundlerock p-4 max-w-2xl mx-auto space-y-4">
+            <div class="card-header-bundlerock -m-4 mb-2 border-b">
+                <span>Simulador de Compras a Fin de Mes y Mora</span>
+            </div>
             <p class="text-xs text-slate-500">Comprueba el impacto de compras pre-corte vs post-corte y el cálculo diferenciado de intereses moratorios.</p>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Monto de la Compra (S/)</label>
-                    <input type="number" id="fm-capital" value="100.0" step="10" onchange="calcularFinDeMesSim()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-bold">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Monto de la Compra (S/)</label>
+                    <input type="number" id="fm-capital" value="100.0" step="10" onchange="calcularFinDeMesSim()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono font-bold">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Fecha de Compra</label>
-                    <input type="date" id="fm-fcompra" value="2026-09-12" onchange="calcularFinDeMesSim()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Fecha de Compra</label>
+                    <input type="date" id="fm-fcompra" value="2026-09-12" onchange="calcularFinDeMesSim()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Fecha de Corte del Mes</label>
-                    <input type="date" id="fm-fcorte" value="2026-09-20" onchange="calcularFinDeMesSim()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Fecha de Corte del Mes</label>
+                    <input type="date" id="fm-fcorte" value="2026-09-20" onchange="calcularFinDeMesSim()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Fecha de Pago Pactada</label>
-                    <input type="date" id="fm-fpago" value="2026-09-26" onchange="calcularFinDeMesSim()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-bold text-brand-upc">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Fecha de Pago Pactada</label>
+                    <input type="date" id="fm-fpago" value="2026-09-26" onchange="calcularFinDeMesSim()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono font-bold text-blue-700">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">Fecha Real de Pago (Para simular mora)</label>
-                    <input type="date" id="fm-freal" value="2026-10-05" onchange="calcularFinDeMesSim()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-rose-600 font-bold">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">Fecha Real de Pago (Para mora)</label>
+                    <input type="date" id="fm-freal" value="2026-10-05" onchange="calcularFinDeMesSim()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono text-red-700 font-bold">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">TEA Moratoria Anual (%)</label>
-                    <input type="number" id="fm-tasa-mora" value="5.0" step="0.5" onchange="calcularFinDeMesSim()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">TEA Moratoria Anual (%)</label>
+                    <input type="number" id="fm-tasa-mora" value="5.0" step="0.5" onchange="calcularFinDeMesSim()" class="w-full px-2.5 py-1.5 rounded-xs border border-slate-300 text-xs font-mono">
                 </div>
             </div>
 
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+            <div class="p-4 rounded-xs bg-slate-50 border border-slate-300 space-y-2 font-mono text-xs">
                 <div class="flex justify-between">
-                    <span class="text-slate-500">Clasificación:</span>
-                    <strong id="fm-clasif" class="text-blue-700 font-bold">Pre-corte (Ciclo actual)</strong>
+                    <span class="font-sans text-slate-600">Clasificación de Corte:</span>
+                    <strong id="fm-clasif" class="text-blue-800 font-bold font-sans">Pre-corte (Ciclo actual)</strong>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-slate-500">Días de Financiamiento Regular:</span>
-                    <strong id="fm-dias-reg" class="text-slate-800">14 días</strong>
+                    <span class="font-sans text-slate-600">Días de Financiamiento Regular:</span>
+                    <strong id="fm-dias-reg" class="text-slate-900">14 días</strong>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-slate-500">Interés Compensatorio Devengado:</span>
-                    <strong id="fm-int-comp" class="text-emerald-600">S/ 0.84</strong>
+                    <span class="font-sans text-slate-600">Interés Compensatorio Devengado:</span>
+                    <strong id="fm-int-comp" class="text-emerald-700">S/ 0.84</strong>
                 </div>
-                <div class="flex justify-between p-2 rounded-lg bg-red-100/70 border border-red-200 text-rose-900 font-bold">
-                    <span>Intereses por Mora (<span id="fm-dias-mora">9</span> días de mora):</span>
+                <div class="flex justify-between p-2 rounded-xs bg-red-50 border border-red-300 text-red-900 font-bold">
+                    <span class="font-sans">Intereses por Mora (<span id="fm-dias-mora">9</span> días de mora):</span>
                     <span id="fm-int-mora">+ S/ 0.12</span>
                 </div>
-                <div class="flex justify-between text-base font-black pt-2 border-t border-slate-200">
-                    <span>Total Exigible con Mora:</span>
-                    <span id="fm-total" class="text-brand-upc">S/ 100.96</span>
+                <div class="flex justify-between text-sm font-bold pt-2 border-t border-slate-300">
+                    <span class="font-sans text-slate-800">Total Exigible con Mora:</span>
+                    <span id="fm-total" class="text-[#1a365d]">S/ 100.96</span>
                 </div>
             </div>
         </div>
@@ -228,20 +237,20 @@
         document.getElementById('sim-tasas').classList.add('hidden');
         document.getElementById('sim-findemes').classList.add('hidden');
 
-        document.getElementById('tab-frances').className = "pb-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5";
-        document.getElementById('tab-tasas').className = "pb-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5";
-        document.getElementById('tab-findemes').className = "pb-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5";
+        document.getElementById('tab-frances').className = "pb-2 px-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5 uppercase tracking-wider";
+        document.getElementById('tab-tasas').className = "pb-2 px-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5 uppercase tracking-wider";
+        document.getElementById('tab-findemes').className = "pb-2 px-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5 uppercase tracking-wider";
 
         if (tipo === 'frances') {
             document.getElementById('sim-frances').classList.remove('hidden');
-            document.getElementById('tab-frances').className = "pb-3 text-sm font-bold border-b-2 border-brand-upc text-brand-upc transition flex items-center gap-1.5";
+            document.getElementById('tab-frances').className = "pb-2 px-3 text-xs font-bold border-b-2 border-[#1a365d] text-[#1a365d] transition flex items-center gap-1.5 uppercase tracking-wider";
         } else if (tipo === 'tasas') {
             document.getElementById('sim-tasas').classList.remove('hidden');
-            document.getElementById('tab-tasas').className = "pb-3 text-sm font-bold border-b-2 border-brand-upc text-brand-upc transition flex items-center gap-1.5";
+            document.getElementById('tab-tasas').className = "pb-2 px-3 text-xs font-bold border-b-2 border-[#1a365d] text-[#1a365d] transition flex items-center gap-1.5 uppercase tracking-wider";
             convertirTasas();
         } else if (tipo === 'findemes') {
             document.getElementById('sim-findemes').classList.remove('hidden');
-            document.getElementById('tab-findemes').className = "pb-3 text-sm font-bold border-b-2 border-brand-upc text-brand-upc transition flex items-center gap-1.5";
+            document.getElementById('tab-findemes').className = "pb-2 px-3 text-xs font-bold border-b-2 border-[#1a365d] text-[#1a365d] transition flex items-center gap-1.5 uppercase tracking-wider";
             calcularFinDeMesSim();
         }
     }
@@ -285,15 +294,15 @@
                 tbody.innerHTML = '';
                 d.cronograma.forEach(c => {
                     const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-50";
+                    tr.className = "hover:bg-blue-50/40";
                     tr.innerHTML = `
-                        <td class="p-2.5 font-bold font-sans">${c.numero_cuota}</td>
-                        <td class="p-2.5 font-sans">${c.fecha_vencimiento}</td>
-                        <td class="p-2.5 text-right">S/ ${c.saldo_inicial.toFixed(2)}</td>
-                        <td class="p-2.5 text-right font-bold text-brand-upc">S/ ${c.cuota.toFixed(2)}</td>
-                        <td class="p-2.5 text-right">S/ ${c.amortizacion.toFixed(2)}</td>
-                        <td class="p-2.5 text-right text-emerald-600">S/ ${c.interes.toFixed(2)}</td>
-                        <td class="p-2.5 text-right font-bold">S/ ${c.saldo_final.toFixed(2)}</td>
+                        <td class="p-2 font-bold font-sans">${c.numero_cuota}</td>
+                        <td class="p-2">${c.fecha_vencimiento}</td>
+                        <td class="p-2 text-right">S/ ${c.saldo_inicial.toFixed(2)}</td>
+                        <td class="p-2 text-right font-bold text-blue-700">S/ ${c.cuota.toFixed(2)}</td>
+                        <td class="p-2 text-right">S/ ${c.amortizacion.toFixed(2)}</td>
+                        <td class="p-2 text-right text-emerald-700">S/ ${c.interes.toFixed(2)}</td>
+                        <td class="p-2 text-right font-bold text-slate-900">S/ ${c.saldo_final.toFixed(2)}</td>
                     `;
                     tbody.appendChild(tr);
                 });

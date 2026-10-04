@@ -1,213 +1,210 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard del Comercio{% endblock %}
+{% block title %}Dashboard Comercial{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-4">
     <!-- Header with Quick Action Buttons -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between pb-4 border-b border-slate-200">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between pb-3 border-b border-slate-300">
         <div>
-            <div class="flex items-center space-x-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-brand-upc bg-red-50 px-2.5 py-0.5 rounded-md">
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-700 bg-slate-200 border border-slate-300 px-2 py-0.5 rounded-xs font-mono">
                     {{ current_tienda.giro }}
                 </span>
-                <span class="text-xs text-slate-400">&bull; RUC: {{ current_tienda.ruc }}</span>
+                <span class="text-xs text-slate-500 font-mono">RUC: {{ current_tienda.ruc }}</span>
             </div>
-            <h1 class="text-2xl font-black text-slate-900 tracking-tight mt-1">{{ current_tienda.nombre_comercial }}</h1>
-            <p class="text-sm text-slate-500">Panel de control de cuenta corriente comercial y cobranzas.</p>
+            <h1 class="text-xl font-bold text-slate-900 tracking-tight mt-0.5 uppercase">{{ current_tienda.nombre_comercial }}</h1>
+            <p class="text-xs text-slate-500">Consola de control de cuenta corriente comercial y monitoreo de cartera.</p>
         </div>
-        <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
-            <a href="{{ url_for('pos_credito') }}" class="inline-flex items-center px-4 py-2 bg-brand-upc text-white font-bold rounded-xl shadow hover:bg-red-700 transition text-sm">
-                <i data-lucide="plus" class="w-4 h-4 mr-1.5"></i> Nueva Venta a Crédito
+        <div class="mt-3 md:mt-0 flex flex-wrap gap-1.5">
+            <a href="{{ url_for('pos_credito') }}" class="btn-win32 btn-win32-primary">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Nueva Venta a Crédito</span>
             </a>
-            <a href="{{ url_for('liquidaciones') }}" class="inline-flex items-center px-4 py-2 bg-slate-900 text-white font-bold rounded-xl shadow hover:bg-slate-800 transition text-sm">
-                <i data-lucide="file-check" class="w-4 h-4 mr-1.5"></i> Listados de Corte
+            <a href="{{ url_for('liquidaciones') }}" class="btn-win32">
+                <i data-lucide="file-check" class="w-3.5 h-3.5 text-indigo-600"></i>
+                <span>Listados de Corte</span>
             </a>
-            <a href="{{ url_for('cobranzas') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-bold rounded-xl shadow hover:bg-emerald-700 transition text-sm">
-                <i data-lucide="banknote" class="w-4 h-4 mr-1.5"></i> Registrar Cobranza
+            <a href="{{ url_for('cobranzas') }}" class="btn-win32 bg-emerald-50 hover:bg-emerald-100 border-emerald-400 text-emerald-900">
+                <i data-lucide="banknote" class="w-3.5 h-3.5 text-emerald-700"></i>
+                <span>Registrar Cobranza</span>
             </a>
         </div>
     </div>
 
-    <!-- KPIs Financieros -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between text-slate-500 mb-2">
-                <span class="text-xs font-bold uppercase tracking-wider">Cuentas por Cobrar</span>
-                <div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
-                    <i data-lucide="hourglass" class="w-5 h-5"></i>
-                </div>
+    <!-- KPIs Financieros Utilitarios Win32 -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="card-bundlerock p-3.5">
+            <div class="flex items-center justify-between text-slate-500 mb-1">
+                <span class="text-[11px] font-bold uppercase tracking-wider">Cuentas por Cobrar</span>
+                <i data-lucide="clock" class="w-4 h-4 text-amber-600"></i>
             </div>
-            <div class="text-2xl font-black text-slate-900">{{ stats.saldo_por_cobrar | moneda }}</div>
-            <p class="text-xs text-slate-500 mt-1">Saldo pendiente de liquidación</p>
+            <div class="text-xl font-black text-slate-900 font-mono">{{ stats.saldo_por_cobrar | moneda }}</div>
+            <span class="text-[10px] text-slate-500 font-mono">Saldo exigible pendiente</span>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between text-slate-500 mb-2">
-                <span class="text-xs font-bold uppercase tracking-wider">Crédito Colocado</span>
-                <div class="p-2 bg-blue-50 text-blue-600 rounded-lg">
-                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                </div>
+        <div class="card-bundlerock p-3.5">
+            <div class="flex items-center justify-between text-slate-500 mb-1">
+                <span class="text-[11px] font-bold uppercase tracking-wider">Crédito Colocado</span>
+                <i data-lucide="credit-card" class="w-4 h-4 text-blue-600"></i>
             </div>
-            <div class="text-2xl font-black text-slate-900">{{ stats.total_credito | moneda }}</div>
-            <p class="text-xs text-slate-500 mt-1">Capital total financiado</p>
+            <div class="text-xl font-black text-slate-900 font-mono">{{ stats.total_credito | moneda }}</div>
+            <span class="text-[10px] text-slate-500 font-mono">Capital total financiado</span>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between text-slate-500 mb-2">
-                <span class="text-xs font-bold uppercase tracking-wider">Intereses Generados</span>
-                <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-                    <i data-lucide="trending-up" class="w-5 h-5"></i>
-                </div>
+        <div class="card-bundlerock p-3.5">
+            <div class="flex items-center justify-between text-slate-500 mb-1">
+                <span class="text-[11px] font-bold uppercase tracking-wider">Intereses Generados</span>
+                <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i>
             </div>
-            <div class="text-2xl font-black text-emerald-600">{{ stats.intereses_ganados | moneda }}</div>
-            <p class="text-xs text-slate-500 mt-1">Rendimiento financiero neto</p>
+            <div class="text-xl font-black text-emerald-700 font-mono">{{ stats.intereses_ganados | moneda }}</div>
+            <span class="text-[10px] text-slate-500 font-mono">Rendimiento financiero neto</span>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between text-slate-500 mb-2">
-                <span class="text-xs font-bold uppercase tracking-wider">Vecinos en Cartera</span>
-                <div class="p-2 bg-purple-50 text-purple-600 rounded-lg">
-                    <i data-lucide="users" class="w-5 h-5"></i>
-                </div>
+        <div class="card-bundlerock p-3.5">
+            <div class="flex items-center justify-between text-slate-500 mb-1">
+                <span class="text-[11px] font-bold uppercase tracking-wider">Vecinos en Cartera</span>
+                <i data-lucide="users" class="w-4 h-4 text-[#1a365d]"></i>
             </div>
-            <div class="text-2xl font-black text-slate-900">{{ stats.total_clientes }}</div>
-            <p class="text-xs text-slate-500 mt-1">Líneas de crédito autorizadas</p>
+            <div class="text-xl font-black text-slate-900 font-mono">{{ stats.total_clientes }}</div>
+            <span class="text-[10px] text-slate-500 font-mono">Líneas de crédito autorizadas</span>
         </div>
     </div>
 
     <!-- Central Grid: Chart + Liquidaciones Pendientes -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <!-- Chart -->
-        <div class="lg:col-span-7 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center">
-                <i data-lucide="pie-chart" class="w-5 h-5 mr-2 text-brand-upc"></i>
-                Composición de Cartera Crediticia
-            </h2>
-            <div class="h-64 relative">
-                <canvas id="creditChart"></canvas>
+        <div class="lg:col-span-7 card-bundlerock overflow-hidden flex flex-col justify-between">
+            <div class="card-header-bundlerock flex items-center justify-between">
+                <span class="flex items-center gap-1.5">
+                    <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-blue-600"></i>
+                    Composición de la Cartera Crediticia
+                </span>
+                <span class="text-[10px] text-slate-400 font-mono">Moneda: Soles (PEN)</span>
             </div>
-            <div class="grid grid-cols-3 gap-2 mt-4 text-center border-t border-slate-100 pt-3">
+            <div class="p-4">
+                <div class="h-56 relative">
+                    <canvas id="creditChart"></canvas>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 p-3 bg-slate-50 border-t border-slate-200 text-center font-mono">
                 <div>
-                    <div class="text-xs text-slate-500">Fin de Mes</div>
-                    <div class="text-sm font-bold text-slate-800">
+                    <div class="text-[10px] text-slate-500 font-sans uppercase">Fin de Mes</div>
+                    <div class="text-xs font-bold text-slate-800">
                         {{ (ventas | selectattr('modalidad', 'equalto', 'Fin_De_Mes') | list | length) }} ventas
                     </div>
                 </div>
                 <div>
-                    <div class="text-xs text-slate-500">En Cuotas (Francés)</div>
-                    <div class="text-sm font-bold text-slate-800">
+                    <div class="text-[10px] text-slate-500 font-sans uppercase">En Cuotas</div>
+                    <div class="text-xs font-bold text-slate-800">
                         {{ (ventas | selectattr('modalidad', 'equalto', 'Cuotas') | list | length) }} ventas
                     </div>
                 </div>
                 <div>
-                    <div class="text-xs text-slate-500">TIR Promedio</div>
-                    <div class="text-sm font-bold text-emerald-600">~ 28.5% Anual</div>
+                    <div class="text-[10px] text-slate-500 font-sans uppercase">TIR Promedio</div>
+                    <div class="text-xs font-bold text-emerald-700">28.50% Anual</div>
                 </div>
             </div>
         </div>
 
-        <!-- Alertas de Cobranza en Fecha de Corte -->
-        <div class="lg:col-span-5 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <!-- Cobranzas Pendientes de Vencimiento -->
+        <div class="lg:col-span-5 card-bundlerock overflow-hidden flex flex-col justify-between">
             <div>
-                <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center">
-                    <i data-lucide="alert-circle" class="w-5 h-5 mr-2 text-amber-500"></i>
-                    Cobranzas Pendientes de Vencimiento
-                </h2>
-                <p class="text-xs text-slate-500 mb-4">Listados de pago generados en la fecha de corte pendientes de liquidar.</p>
-
-                <div class="space-y-3 overflow-y-auto max-h-56 pr-1">
+                <div class="card-header-bundlerock flex items-center justify-between">
+                    <span class="flex items-center gap-1.5">
+                        <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-600"></i>
+                        Listados de Corte Pendientes
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-400">Ciclo Actual</span>
+                </div>
+                <div class="p-3 space-y-2 overflow-y-auto max-h-56">
                     {% for l in stats.liquidaciones_pendientes %}
-                    <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between hover:bg-slate-100/70 transition">
+                    <div class="p-2.5 rounded-xs border border-slate-200 bg-slate-50 flex items-center justify-between hover:bg-slate-100 transition">
                         <div>
                             <div class="text-xs font-bold text-slate-900">{{ l.cliente_nombre }}</div>
-                            <div class="text-[11px] text-slate-500">Vence: {{ l.fecha_pago_pactada }}</div>
+                            <div class="text-[10px] font-mono text-slate-500">Vencimiento: {{ l.fecha_pago_pactada }}</div>
                         </div>
                         <div class="text-right">
-                            <div class="text-sm font-black text-brand-upc">{{ l.total_exigible | moneda }}</div>
-                            <a href="{{ url_for('liquidacion_detalle', liq_id=l.id) }}" class="text-[11px] font-bold text-blue-600 hover:underline">
-                                Ver detalle &rarr;
+                            <div class="text-xs font-black text-[#1a365d] font-mono">{{ l.total_exigible | moneda }}</div>
+                            <a href="{{ url_for('liquidacion_detalle', liq_id=l.id) }}" class="text-[10px] font-bold text-blue-600 hover:underline">
+                                Ver Detalle &rarr;
                             </a>
                         </div>
                     </div>
                     {% else %}
                     <div class="text-center py-8 text-slate-400">
-                        <i data-lucide="check-circle-2" class="w-8 h-8 mx-auto text-emerald-400 mb-1"></i>
-                        <p class="text-xs">No hay liquidaciones pendientes vencidas.</p>
+                        <i data-lucide="check-circle-2" class="w-6 h-6 mx-auto text-emerald-500 mb-1"></i>
+                        <p class="text-xs">No existen liquidaciones pendientes de pago.</p>
                     </div>
                     {% endfor %}
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-slate-100 mt-4">
-                <a href="{{ url_for('liquidaciones') }}" class="w-full py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl text-xs font-bold flex items-center justify-center transition">
-                    Administrar todos los listados de cobro
+            <div class="p-2.5 bg-slate-50 border-t border-slate-200">
+                <a href="{{ url_for('liquidaciones') }}" class="btn-win32 w-full justify-center">
+                    <span>Administrar todos los listados de corte</span>
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Estado de Clientes de la Tienda -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-5 border-b border-slate-200 flex justify-between items-center">
-            <div>
-                <h2 class="text-base font-bold text-slate-800">Estado de Líneas de Crédito por Vecino</h2>
-                <p class="text-xs text-slate-500">Control estricto de deuda acumulada vs límite asignado.</p>
-            </div>
-            <a href="{{ url_for('clientes') }}" class="text-xs font-bold text-brand-upc hover:underline">
+    <!-- Tabla de Clientes y Líneas de Crédito -->
+    <div class="card-bundlerock overflow-hidden">
+        <div class="card-header-bundlerock flex justify-between items-center">
+            <span>Estado de Líneas de Crédito por Vecino</span>
+            <a href="{{ url_for('clientes') }}" class="text-[11px] font-bold text-blue-600 hover:underline">
                 Gestionar clientes &rarr;
             </a>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-                <thead class="bg-slate-50 text-slate-600 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-300 font-mono uppercase tracking-wider">
                     <tr>
-                        <th class="px-5 py-3.5">Cliente</th>
-                        <th class="px-5 py-3.5">Documento / Teléfono</th>
-                        <th class="px-5 py-3.5">Condiciones Pactadas</th>
-                        <th class="px-5 py-3.5 text-right">Límite Crédito</th>
-                        <th class="px-5 py-3.5 text-right">Deuda Actual</th>
-                        <th class="px-5 py-3.5 text-right">Disponible</th>
-                        <th class="px-5 py-3.5 text-center">Estado</th>
+                        <th class="px-3 py-2">Cliente</th>
+                        <th class="px-3 py-2">Documento</th>
+                        <th class="px-3 py-2">Condiciones Contractuales</th>
+                        <th class="px-3 py-2 text-right">Límite</th>
+                        <th class="px-3 py-2 text-right">Deuda</th>
+                        <th class="px-3 py-2 text-right">Disponible</th>
+                        <th class="px-3 py-2 text-center">Estado</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-slate-200">
                     {% for c in clientes %}
                     {% set disp = c.limite_credito - c.deuda_actual %}
                     {% set pct_uso = (c.deuda_actual / c.limite_credito * 100) if c.limite_credito > 0 else 0 %}
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="px-5 py-4 font-bold text-slate-900">
+                    <tr class="hover:bg-blue-50/40 transition">
+                        <td class="px-3 py-2 font-bold text-slate-900">
                             {{ c.nombres }} {{ c.apellidos }}
                         </td>
-                        <td class="px-5 py-4 text-xs">
-                            <span class="font-mono font-semibold text-slate-700">{{ c.num_documento }}</span>
-                            <div class="text-slate-500">{{ c.telefono }}</div>
+                        <td class="px-3 py-2 font-mono text-slate-600">
+                            {{ c.num_documento }}
                         </td>
-                        <td class="px-5 py-4 text-xs text-slate-600">
-                            <div>Compensatoria: <span class="font-bold text-slate-800">{{ c.tipo_tasa_comp }} {{ (c.tasa_comp * 100) | round(2) }}%</span></div>
-                            <div class="text-slate-500">Corte día {{ c.dia_corte }} &bull; Pago día {{ c.dia_pago }}</div>
+                        <td class="px-3 py-2 text-slate-600">
+                            <span class="font-bold text-slate-800">{{ c.tipo_tasa_comp }} {{ (c.tasa_comp * 100) | round(2) }}%</span>
+                            <span class="text-slate-400 font-mono">(Corte: {{ c.dia_corte }} &bull; Pago: {{ c.dia_pago }})</span>
                         </td>
-                        <td class="px-5 py-4 text-right font-semibold text-slate-800">
+                        <td class="px-3 py-2 text-right font-mono text-slate-700">
                             {{ c.limite_credito | moneda }}
                         </td>
-                        <td class="px-5 py-4 text-right font-black {{ 'text-rose-600' if c.deuda_actual > 0 else 'text-slate-400' }}">
+                        <td class="px-3 py-2 text-right font-mono font-bold {{ 'text-red-600' if c.deuda_actual > 0 else 'text-slate-400' }}">
                             {{ c.deuda_actual | moneda }}
                         </td>
-                        <td class="px-5 py-4 text-right font-black text-emerald-600">
+                        <td class="px-3 py-2 text-right font-mono font-bold text-emerald-700">
                             {{ disp | moneda }}
                         </td>
-                        <td class="px-5 py-4 text-center">
+                        <td class="px-3 py-2 text-center">
                             {% if pct_uso >= 95 %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-rose-100 text-rose-800">
-                                Al límite
+                            <span class="inline-block px-1.5 py-0.5 rounded-xs text-[10px] font-bold bg-red-100 text-red-800 border border-red-200 font-mono">
+                                LÍMITE
                             </span>
                             {% elif c.deuda_actual > 0 %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800">
-                                Con saldo
+                            <span class="inline-block px-1.5 py-0.5 rounded-xs text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 font-mono">
+                                SALDO
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-800">
-                                Al día
+                            <span class="inline-block px-1.5 py-0.5 rounded-xs text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 font-mono">
+                                AL DÍA
                             </span>
                             {% endif %}
                         </td>
@@ -234,9 +231,9 @@
                         {{ stats.saldo_por_cobrar | round(2) }},
                         {{ stats.intereses_ganados | round(2) }}
                     ],
-                    backgroundColor: ['#10b981', '#f59e0b', '#c8102e'],
-                    borderWidth: 2,
-                    borderColor: '#ffffff'
+                    backgroundColor: ['#10b981', '#1a365d', '#2563eb'],
+                    borderWidth: 1,
+                    borderColor: '#cbd5e1'
                 }]
             },
             options: {
@@ -245,10 +242,10 @@
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: { boxWidth: 12, font: { size: 11 } }
+                        labels: { boxWidth: 10, font: { size: 10, family: 'monospace' } }
                     }
                 },
-                cutout: '70%'
+                cutout: '65%'
             }
         });
     });
