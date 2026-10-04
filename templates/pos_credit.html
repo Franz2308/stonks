@@ -1,0 +1,454 @@
+{% extends "base.html" %}
+
+{% block title %}Punto de Venta a Crédito (POS){% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-200">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Punto de Venta a Crédito</h1>
+            <p class="text-sm text-slate-500 mt-1">Registro de compras en cuenta corriente con cálculo financiero automático.</p>
+        </div>
+        <div class="mt-3 sm:mt-0 inline-flex items-center text-xs bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200">
+            <i data-lucide="shield-alert" class="w-4 h-4 mr-1.5 text-brand-upc"></i>
+            <span>Validación estricta de límite de crédito y corte</span>
+        </div>
+    </div>
+
+    <form action="{{ url_for('pos_credito') }}" method="POST" id="pos-form">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left: Cliente y Catálogo de Productos (7 cols) -->
+            <div class="lg:col-span-7 space-y-5">
+                
+                <!-- Selector de Cliente con tarjeta de crédito dinámico -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center">
+                        <i data-lucide="user-check" class="w-4 h-4 mr-1.5 text-brand-upc"></i>
+                        Paso 1: Seleccionar Cliente Vecino
+                    </h2>
+                    
+                    <div>
+                        <select id="cliente-select" name="cliente_id" required onchange="actualizarInfoCliente()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold bg-white focus:ring-2 focus:ring-red-500">
+                            <option value="">-- Seleccione un cliente registrado --</option>
+                            {% for c in clientes %}
+                            {% set disp = c.limite_credito - c.deuda_actual %}
+                            <option value="{{ c.id }}"
+                                    data-limite="{{ c.limite_credito }}"
+                                    data-deuda="{{ c.deuda_actual }}"
+                                    data-disp="{{ disp }}"
+                                    data-plazo="{{ c.plazo_maximo_meses }}"
+                                    data-corte="{{ c.dia_corte }}"
+                                    data-pago="{{ c.dia_pago }}"
+                                    data-tasa-comp="{{ c.tasa_comp }}"
+                                    data-tipo-comp="{{ c.tipo_tasa_comp }}"
+                                    data-cap-comp="{{ c.cap_comp }}"
+                                    data-tasa-mora="{{ c.tasa_mora }}"
+                                    data-tipo-mora="{{ c.tipo_tasa_mora }}"
+                                    data-cok="{{ c.cok_anual }}">
+                                {{ c.nombres }} {{ c.apellidos }} (DNI: {{ c.num_documento }}) - Disp: S/ {{ disp | round(2) }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Panel Dinámico de Estado Crediticio del Cliente -->
+                    <div id="cliente-panel" class="hidden p-4 rounded-xl border bg-slate-50 border-slate-200 space-y-3">
+                        <div class="grid grid-cols-3 gap-3 text-center">
+                            <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase">Límite Total</span>
+                                <div id="info-limite" class="text-sm font-black text-slate-800">S/ 0.00</div>
+                            </div>
+                            <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase">Deuda Actual</span>
+                                <div id="info-deuda" class="text-sm font-black text-rose-600">S/ 0.00</div>
+                            </div>
+                            <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase">Disponible</span>
+                                <div id="info-disp" class="text-sm font-black text-emerald-600">S/ 0.00</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-600 flex justify-between pt-1">
+                            <span>Tasa Pactada: <strong id="info-tasa" class="text-slate-800">TEA 24.0%</strong></span>
+                            <span>Ciclo: <strong id="info-ciclo" class="text-slate-800">Corte día 20 &bull; Pago día 26</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selección de Productos del Catálogo -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
+                        <span class="flex items-center">
+                            <i data-lucide="package-check" class="w-4 h-4 mr-1.5 text-brand-upc"></i>
+                            Paso 2: Elegir Productos / Servicios a Crédito
+                        </span>
+                        <span class="text-xs text-slate-400 font-normal">Precios de lista (crédito)</span>
+                    </h2>
+
+                    <div class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                        {% for p in productos %}
+                        <div class="p-3 rounded-xl border border-slate-200 bg-white flex items-center justify-between hover:border-slate-300 transition">
+                            <div class="flex items-center space-x-3">
+                                <img src="{{ p.imagen_url or 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=100' }}" alt="foto" class="w-10 h-10 object-cover rounded-lg border border-slate-100 flex-shrink-0">
+                                <div>
+                                    <div class="text-xs font-bold text-slate-900">{{ p.descripcion }}</div>
+                                    <div class="text-[11px] text-slate-500">
+                                        Contado: {{ p.precio_contado | moneda }} &bull;
+                                        <strong class="text-brand-upc">Crédito: {{ p.precio_lista | moneda }}</strong> / {{ p.unidad_medida }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input type="hidden" name="prod_id[]" value="{{ p.id }}">
+                                <span class="text-xs text-slate-400">Cant:</span>
+                                <input type="number" min="0" step="0.5" value="0" name="cantidad[]"
+                                       data-precio="{{ p.precio_lista }}"
+                                       onchange="recalcularCarrito()"
+                                       class="w-16 px-2 py-1 border border-slate-300 rounded-lg text-xs font-bold text-center input-cant">
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Fecha y Hora de la Operación (Simulador de fechas pre/post corte) -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center">
+                        <i data-lucide="calendar" class="w-4 h-4 mr-1.5 text-brand-upc"></i>
+                        Paso 3: Fecha y Hora de la Compra
+                    </h2>
+                    <p class="text-xs text-slate-500">Permite simular compras realizadas antes o después de la fecha y hora de corte.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Fecha de Compra *</label>
+                            <input type="date" id="fecha-compra" name="fecha_compra" value="{{ now.strftime('%Y-%m-%d') }}" onchange="recalcularTodo()" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Hora de Compra *</label>
+                            <input type="time" name="hora_compra" value="{{ now.strftime('%H:%M:%S') }}" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Modalidad Financiera, Validación y Resumen (5 cols) -->
+            <div class="lg:col-span-5 space-y-5">
+                
+                <!-- Selector de Modalidad -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center">
+                        <i data-lucide="sliders" class="w-4 h-4 mr-1.5 text-brand-upc"></i>
+                        Paso 4: Modalidad de Pago a Crédito
+                    </h2>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:border-brand-upc transition flex flex-col justify-between">
+                            <div class="flex items-center space-x-2">
+                                <input type="radio" name="modalidad" value="Fin_De_Mes" checked onchange="cambiarModalidad('Fin_De_Mes')" class="text-brand-upc focus:ring-red-500">
+                                <span class="text-xs font-bold text-slate-800">Fin de Mes</span>
+                            </div>
+                            <span class="text-[11px] text-slate-500 mt-2">Un solo pago al corte</span>
+                        </label>
+                        <label class="p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:border-brand-upc transition flex flex-col justify-between">
+                            <div class="flex items-center space-x-2">
+                                <input type="radio" name="modalidad" value="Cuotas" onchange="cambiarModalidad('Cuotas')" class="text-brand-upc focus:ring-red-500">
+                                <span class="text-xs font-bold text-slate-800">En Cuotas</span>
+                            </div>
+                            <span class="text-[11px] text-slate-500 mt-2">Método Francés (30 días)</span>
+                        </label>
+                    </div>
+
+                    <!-- Configuración de Cuotas (solo si es en cuotas) -->
+                    <div id="panel-cuotas" class="hidden p-3.5 rounded-xl border border-purple-200 bg-purple-50/50 space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800 mb-1">Número de Meses (Cuotas) *</label>
+                            <select id="num-cuotas-select" name="num_cuotas" onchange="recalcularTodo()" class="w-full px-3 py-2 rounded-lg border border-purple-300 text-sm font-bold bg-white">
+                                <option value="2">2 Meses Comerciales</option>
+                                <option value="3" selected>3 Meses Comerciales (Ejemplo Enunciado)</option>
+                                <option value="4">4 Meses Comerciales</option>
+                                <option value="6">6 Meses Comerciales</option>
+                                <option value="12">12 Meses Comerciales</option>
+                            </select>
+                        </div>
+                        <div class="text-[11px] text-purple-900 bg-white p-2 rounded-lg border border-purple-100">
+                            <strong>Período de Gracia Total:</strong> Los días transcurridos hasta la primera fecha pactada se capitalizan automáticamente a la deuda inicial antes de computar las cuotas.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen Financiero y Alerta de Límite -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
+                        <span>Resumen Financiero</span>
+                        <span id="badge-corte" class="text-[11px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">Pre-Corte</span>
+                    </h2>
+
+                    <!-- Alerta de Límite Excedido -->
+                    <div id="alerta-limite" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs">
+                        <div class="flex items-center font-bold">
+                            <i data-lucide="alert-octagon" class="w-4 h-4 mr-1.5 flex-shrink-0 text-rose-600"></i>
+                            <span>LÍMITE DE CRÉDITO EXCEDIDO</span>
+                        </div>
+                        <p class="mt-1" id="alerta-limite-texto">La compra supera el saldo de crédito disponible.</p>
+                    </div>
+
+                    <div class="space-y-2 text-xs border-b border-slate-100 pb-3">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Subtotal Precio de Lista:</span>
+                            <strong id="resumen-subtotal" class="text-slate-800">S/ 0.00</strong>
+                        </div>
+                        <div id="fila-gracia" class="hidden flex justify-between text-purple-700">
+                            <span>Interés Gracia Total (<span id="txt-dias-gracia">11</span> días):</span>
+                            <strong id="resumen-gracia">S/ 0.00</strong>
+                        </div>
+                        <div id="fila-capitalizado" class="hidden flex justify-between font-bold text-slate-800">
+                            <span>Capital Capitalizado Base:</span>
+                            <span id="resumen-capitalizado">S/ 0.00</span>
+                        </div>
+                        <div id="fila-int-comp" class="flex justify-between text-emerald-700">
+                            <span>Interés Compensatorio Proyectado:</span>
+                            <strong id="resumen-int-comp">S/ 0.00</strong>
+                        </div>
+                        <div id="fila-cuota" class="hidden flex justify-between text-brand-upc font-bold text-sm pt-1">
+                            <span>Cuota Mensual Fija (Francés):</span>
+                            <span id="resumen-cuota">S/ 0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-sm pt-1">
+                        <span class="font-extrabold text-slate-900">Total a Liquidar:</span>
+                        <span id="resumen-total" class="text-xl font-black text-brand-upc">S/ 0.00</span>
+                    </div>
+
+                    <div class="text-[11px] text-slate-400 text-center" id="txt-vencimiento">
+                        Vencimiento de pago: Seleccione cliente
+                    </div>
+
+                    <!-- Botón de Confirmación -->
+                    <button type="submit" id="btn-confirmar" disabled class="w-full py-3.5 bg-brand-upc text-white font-extrabold rounded-xl shadow-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
+                        <i data-lucide="check" class="w-5 h-5"></i>
+                        <span>Aprobar y Emitir Venta a Crédito</span>
+                    </button>
+                </div>
+
+                <!-- Cronograma Francés Preview (acordeón dinámico) -->
+                <div id="preview-cronograma" class="hidden bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
+                        <span>Plan de Pagos (Método Francés)</span>
+                        <span class="text-[11px] text-slate-400 font-mono">Base 360 &bull; 30 días</span>
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-[11px]">
+                            <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                                <tr>
+                                    <th class="p-1.5">N°</th>
+                                    <th class="p-1.5">Vence</th>
+                                    <th class="p-1.5 text-right">Cuota</th>
+                                    <th class="p-1.5 text-right">Amort.</th>
+                                    <th class="p-1.5 text-right">Interés</th>
+                                    <th class="p-1.5 text-right">Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cronograma-body" class="divide-y divide-slate-100">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let clienteSeleccionado = null;
+    let totalCarrito = 0.0;
+    let modalidadActual = 'Fin_De_Mes';
+
+    function actualizarInfoCliente() {
+        const select = document.getElementById('cliente-select');
+        const opt = select.options[select.selectedIndex];
+        const panel = document.getElementById('cliente-panel');
+
+        if (!opt || !opt.value) {
+            clienteSeleccionado = null;
+            panel.classList.add('hidden');
+            recalcularTodo();
+            return;
+        }
+
+        clienteSeleccionado = {
+            id: opt.value,
+            limite: parseFloat(opt.dataset.limite),
+            deuda: parseFloat(opt.dataset.deuda),
+            disp: parseFloat(opt.dataset.disp),
+            plazoMax: parseInt(opt.dataset.plazo),
+            diaCorte: parseInt(opt.dataset.corte),
+            diaPago: parseInt(opt.dataset.pago),
+            tasaComp: parseFloat(opt.dataset.tasaComp),
+            tipoComp: opt.dataset.tipoComp,
+            capComp: opt.dataset.capComp,
+            tasaMora: parseFloat(opt.dataset.tasaMora),
+            cok: parseFloat(opt.dataset.cok)
+        };
+
+        document.getElementById('info-limite').innerText = `S/ ${clienteSeleccionado.limite.toFixed(2)}`;
+        document.getElementById('info-deuda').innerText = `S/ ${clienteSeleccionado.deuda.toFixed(2)}`;
+        document.getElementById('info-disp').innerText = `S/ ${clienteSeleccionado.disp.toFixed(2)}`;
+        document.getElementById('info-tasa').innerText = `${clienteSeleccionado.tipoComp} ${(clienteSeleccionado.tasaComp * 100).toFixed(2)}% (${clienteSeleccionado.capComp})`;
+        document.getElementById('info-ciclo').innerText = `Corte día ${clienteSeleccionado.diaCorte} • Pago día ${clienteSeleccionado.diaPago}`;
+
+        panel.classList.remove('hidden');
+        recalcularTodo();
+    }
+
+    function cambiarModalidad(mod) {
+        modalidadActual = mod;
+        const panelCuotas = document.getElementById('panel-cuotas');
+        const filaGracia = document.getElementById('fila-gracia');
+        const filaCapitalizado = document.getElementById('fila-capitalizado');
+        const filaCuota = document.getElementById('fila-cuota');
+        const previewCronograma = document.getElementById('preview-cronograma');
+
+        if (mod === 'Cuotas') {
+            panelCuotas.classList.remove('hidden');
+            filaGracia.classList.remove('hidden');
+            filaCapitalizado.classList.remove('hidden');
+            filaCuota.classList.remove('hidden');
+            previewCronograma.classList.remove('hidden');
+        } else {
+            panelCuotas.classList.add('hidden');
+            filaGracia.classList.add('hidden');
+            filaCapitalizado.classList.add('hidden');
+            filaCuota.classList.add('hidden');
+            previewCronograma.classList.add('hidden');
+        }
+        recalcularTodo();
+    }
+
+    function recalcularCarrito() {
+        const inputs = document.querySelectorAll('.input-cant');
+        totalCarrito = 0.0;
+        inputs.forEach(input => {
+            const cant = parseFloat(input.value) || 0;
+            const precio = parseFloat(input.dataset.precio) || 0;
+            totalCarrito += cant * precio;
+        });
+        totalCarrito = Math.round(totalCarrito * 100) / 100;
+        document.getElementById('resumen-subtotal').innerText = `S/ ${totalCarrito.toFixed(2)}`;
+        recalcularTodo();
+    }
+
+    function recalcularTodo() {
+        const btn = document.getElementById('btn-confirmar');
+        const alerta = document.getElementById('alerta-limite');
+        const alertaTxt = document.getElementById('alerta-limite-texto');
+
+        if (!clienteSeleccionado || totalCarrito <= 0) {
+            btn.disabled = true;
+            alerta.classList.add('hidden');
+            document.getElementById('resumen-total').innerText = `S/ 0.00`;
+            return;
+        }
+
+        // VALIDACIÓN DE LÍMITE DE CRÉDITO DEL ENUNCIADO
+        if (totalCarrito > clienteSeleccionado.disp) {
+            btn.disabled = true;
+            alerta.classList.remove('hidden');
+            const exceso = totalCarrito - clienteSeleccionado.disp;
+            alertaTxt.innerText = `La compra (S/ ${totalCarrito.toFixed(2)}) supera el crédito disponible (S/ ${clienteSeleccionado.disp.toFixed(2)}) por S/ ${exceso.toFixed(2)}. Reduzca la cantidad o aumente el límite.`;
+            return;
+        } else {
+            alerta.classList.add('hidden');
+            btn.disabled = false;
+        }
+
+        // Simular con API según modalidad
+        const fechaCompra = document.getElementById('fecha-compra').value;
+        const dCompra = new Date(fechaCompra + 'T00:00:00');
+        const anio = dCompra.getFullYear();
+        const mes = dCompra.getMonth() + 1;
+        
+        const fCorte = `${anio}-${String(mes).padStart(2, '0')}-${String(clienteSeleccionado.diaCorte).padStart(2, '0')}`;
+        const fPago = `${anio}-${String(mes).padStart(2, '0')}-${String(clienteSeleccionado.diaPago).padStart(2, '0')}`;
+
+        if (modalidadActual === 'Cuotas') {
+            const numCuotas = document.getElementById('num-cuotas-select').value;
+            fetch("{{ url_for('api_simular_frances') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    capital: totalCarrito,
+                    fecha_compra: fechaCompra,
+                    fecha_corte: fCorte,
+                    primer_dia_pago: fPago,
+                    num_cuotas: numCuotas,
+                    tipo_tasa: clienteSeleccionado.tipoComp,
+                    valor_tasa: clienteSeleccionado.tasaComp * 100,
+                    capitalizacion: clienteSeleccionado.capComp,
+                    cok_anual: clienteSeleccionado.cok * 100
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    const d = res.data;
+                    document.getElementById('txt-dias-gracia').innerText = d.dias_gracia;
+                    document.getElementById('resumen-gracia').innerText = `S/ ${d.interes_gracia.toFixed(2)}`;
+                    document.getElementById('resumen-capitalizado').innerText = `S/ ${d.capital_capitalizado.toFixed(2)}`;
+                    document.getElementById('resumen-int-comp').innerText = `S/ ${(d.total_intereses - d.interes_gracia).toFixed(2)}`;
+                    document.getElementById('resumen-cuota').innerText = `S/ ${d.cuota_mensual_fija.toFixed(2)}`;
+                    document.getElementById('resumen-total').innerText = `S/ ${d.total_a_pagar.toFixed(2)}`;
+                    document.getElementById('txt-vencimiento').innerText = `1° cuota vence: ${d.cronograma[0].fecha_vencimiento}`;
+
+                    // Llenar tabla cronograma
+                    const tbody = document.getElementById('cronograma-body');
+                    tbody.innerHTML = '';
+                    d.cronograma.forEach(c => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="p-1.5 font-bold">${c.numero_cuota}</td>
+                            <td class="p-1.5">${c.fecha_vencimiento}</td>
+                            <td class="p-1.5 text-right font-bold text-brand-upc">S/ ${c.cuota.toFixed(2)}</td>
+                            <td class="p-1.5 text-right">S/ ${c.amortizacion.toFixed(2)}</td>
+                            <td class="p-1.5 text-right text-emerald-600">S/ ${c.interes.toFixed(2)}</td>
+                            <td class="p-1.5 text-right font-mono">S/ ${c.saldo_final.toFixed(2)}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            });
+        } else {
+            // Fin de mes
+            fetch("{{ url_for('api_simular_fin_de_mes') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    capital: totalCarrito,
+                    fecha_compra: fechaCompra,
+                    fecha_corte: fCorte,
+                    fecha_pago_pactada: fPago,
+                    tipo_tasa: clienteSeleccionado.tipoComp,
+                    valor_tasa: clienteSeleccionado.tasaComp * 100,
+                    capitalizacion: clienteSeleccionado.capComp
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    const d = res.data;
+                    document.getElementById('resumen-int-comp').innerText = `S/ ${d.interes_compensatorio.toFixed(2)}`;
+                    document.getElementById('resumen-total').innerText = `S/ ${d.total_pactado.toFixed(2)}`;
+                    document.getElementById('badge-corte').innerText = d.es_post_corte ? "POST-CORTE (Pasa a mes siguiente)" : "PRE-CORTE (Ciclo actual)";
+                    document.getElementById('badge-corte').className = d.es_post_corte ? 
+                        "text-[11px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800" : 
+                        "text-[11px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800";
+                    document.getElementById('txt-vencimiento').innerText = `Fecha pactada de pago: ${d.fecha_pago_pactada} (${d.dias_credito} días financiamiento)`;
+                }
+            });
+        }
+    }
+</script>
+{% endblock %}

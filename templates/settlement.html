@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Listados de Pago (Liquidaciones de Corte){% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-200">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Listados de Pago en Fecha de Corte</h1>
+            <p class="text-sm text-slate-500 mt-1">Cierre mensual de compras a crédito, cómputo de intereses y emisión de cuentas por cobrar.</p>
+        </div>
+        <button onclick="document.getElementById('modal-nueva-liquidacion').classList.remove('hidden')" class="mt-3 sm:mt-0 inline-flex items-center px-4 py-2.5 bg-brand-upc text-white font-bold rounded-xl shadow hover:bg-red-700 transition text-sm">
+            <i data-lucide="file-plus" class="w-4 h-4 mr-2"></i>
+            <span>Generar Listado de Pago</span>
+        </button>
+    </div>
+
+    <!-- Regla del Enunciado Alert Box -->
+    <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs leading-relaxed flex items-start space-x-3">
+        <i data-lucide="info" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"></i>
+        <div>
+            <span class="font-bold">Regla del Enunciado (Numeral 6):</span> En la fecha de corte, el sistema consolida todas las compras realizadas antes del día y hora de corte, calculando los intereses compensatorios devengados por los días transcurridos hasta la fecha pactada de pago. Si el cliente paga con retraso, el sistema detalla en un nuevo ítem identificado como <strong>"Intereses por mora"</strong> sobre el total adeudado.
+        </div>
+    </div>
+
+    <!-- Tabla de Liquidaciones -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-50 text-slate-600 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+                    <tr>
+                        <th class="px-5 py-3.5">Cliente</th>
+                        <th class="px-5 py-3.5">Periodo / Corte</th>
+                        <th class="px-5 py-3.5">Fecha Pactada Pago</th>
+                        <th class="px-5 py-3.5 text-right">Capital Compras</th>
+                        <th class="px-5 py-3.5 text-right">Interés Comp.</th>
+                        <th class="px-5 py-3.5 text-right">Total Exigible</th>
+                        <th class="px-5 py-3.5 text-center">Estado</th>
+                        <th class="px-5 py-3.5 text-right">Detalle</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for l in liquidaciones %}
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="px-5 py-4 font-bold text-slate-900">
+                            <div>{{ l.cliente_nombre }}</div>
+                            <span class="text-xs font-mono text-slate-400">DNI: {{ l.num_documento }}</span>
+                        </td>
+                        <td class="px-5 py-4 text-xs text-slate-700">
+                            <span class="font-bold">{{ l.periodo_mes_anio }}</span>
+                            <div class="text-slate-400">Corte: {{ l.fecha_corte }}</div>
+                        </td>
+                        <td class="px-5 py-4 text-xs font-semibold text-slate-800">
+                            {{ l.fecha_pago_pactada }}
+                        </td>
+                        <td class="px-5 py-4 text-right font-medium text-slate-700">
+                            {{ l.subtotal_capital | moneda }}
+                        </td>
+                        <td class="px-5 py-4 text-right font-medium text-emerald-600">
+                            {{ l.total_interes_compensatorio | moneda }}
+                        </td>
+                        <td class="px-5 py-4 text-right font-black text-brand-upc text-base">
+                            {{ l.total_exigible | moneda }}
+                        </td>
+                        <td class="px-5 py-4 text-center">
+                            {% if l.estado == 'Pagado' %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                                Pagado Puntual
+                            </span>
+                            {% elif l.estado == 'Pagado_Con_Mora' %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800">
+                                Pagado con Mora
+                            </span>
+                            {% elif l.dias_mora > 0 or l.estado == 'En_Mora' %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
+                                Vencido / En Mora
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+                                Pendiente
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-5 py-4 text-right">
+                            <a href="{{ url_for('liquidacion_detalle', liq_id=l.id) }}" class="inline-flex items-center text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 hover:bg-blue-100 transition">
+                                <i data-lucide="eye" class="w-3.5 h-3.5 mr-1"></i> Ver Listado
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center py-10 text-slate-400 text-xs">
+                            No se han emitido listados de pago aún. Haga clic en "Generar Listado de Pago".
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Generar Liquidación -->
+<div id="modal-nueva-liquidacion" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
+        <div class="flex justify-between items-center pb-3 border-b border-slate-200">
+            <h3 class="text-lg font-black text-slate-800">Generar Listado de Pago de Corte</h3>
+            <button onclick="document.getElementById('modal-nueva-liquidacion').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <form action="{{ url_for('liquidaciones_generar') }}" method="POST" class="mt-4 space-y-4">
+            <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">Cliente Vecino *</label>
+                <select name="cliente_id" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white font-medium">
+                    {% for c in clientes %}
+                    <option value="{{ c.id }}">{{ c.nombres }} {{ c.apellidos }} (DNI: {{ c.num_documento }}) - Corte día {{ c.dia_corte }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1">Periodo Mensual de Facturación (AAAA-MM) *</label>
+                <input type="month" name="periodo" required value="{{ now.strftime('%Y-%m') }}" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1">
+                <p><strong>Cálculo Automático:</strong></p>
+                <p>&bull; Filtra compras de fin de mes realizadas antes o en la fecha de corte.</p>
+                <p>&bull; Aplica la tasa pactada por los días transcurridos hasta la fecha de pago pactada.</p>
+                <p>&bull; Difiere automáticamente compras post-corte al mes siguiente.</p>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-3 border-t border-slate-200">
+                <button type="button" onclick="document.getElementById('modal-nueva-liquidacion').classList.add('hidden')" class="px-4 py-2 border border-slate-300 rounded-xl text-slate-700 text-sm font-medium hover:bg-slate-50">
+                    Cancelar
+                </button>
+                <button type="submit" class="px-5 py-2 bg-brand-upc text-white rounded-xl text-sm font-bold shadow hover:bg-red-700">
+                    Procesar y Emitir Listado
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

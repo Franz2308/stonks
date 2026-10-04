@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Caja y Registro de Pagos{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-200">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Caja y Cobranza de Cuentas Corrientes</h1>
+            <p class="text-sm text-slate-500 mt-1">Recepción de pagos con aplicación estricta de orden de prelación legal (Anexo A).</p>
+        </div>
+        <div class="mt-3 sm:mt-0 inline-flex items-center text-xs bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-200 font-medium">
+            <i data-lucide="check-shield" class="w-4 h-4 mr-1.5 text-emerald-600"></i>
+            <span>Prelación: 1° Mora &bull; 2° Compensatorio &bull; 3° Capital</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Formulario de Cobro (5 cols) -->
+        <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-5">
+            <div class="border-b border-slate-100 pb-3">
+                <h2 class="text-base font-extrabold text-slate-900">Registrar Cobro en Ventanilla</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Liquidación de listados de cobro pendientes.</p>
+            </div>
+
+            <form action="{{ url_for('cobranzas') }}" method="POST" id="form-cobro" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Listado de Pago a Cancelar *</label>
+                    <select id="select-liq" name="liquidacion_id" required onchange="cargarLiquidacion()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold bg-white focus:ring-2 focus:ring-red-500">
+                        <option value="">-- Seleccione una cuenta por cobrar --</option>
+                        {% for p in pendientes %}
+                        <option value="{{ p.id }}"
+                                data-cliente="{{ p.cliente_nombre }}"
+                                data-capital="{{ p.subtotal_capital }}"
+                                data-comp="{{ p.total_interes_compensatorio }}"
+                                data-total="{{ p.total_exigible }}"
+                                data-pago-pactada="{{ p.fecha_pago_pactada }}"
+                                data-tasa-mora="{{ p.tasa_mora }}"
+                                data-tipo-mora="{{ p.tipo_tasa_mora }}">
+                            {{ p.cliente_nombre }} &bull; Periodo {{ p.periodo_mes_anio }} &bull; S/ {{ p.total_exigible | round(2) }} (Vence: {{ p.fecha_pago_pactada }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Fecha Efectiva del Pago *</label>
+                    <input type="date" id="fecha-pago" name="fecha_pago" value="{{ now.strftime('%Y-%m-%d') }}" onchange="recalcularMora()" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                    <span class="text-[11px] text-slate-400 mt-0.5 block">Si la fecha es posterior a la fecha pactada, el sistema calcula mora automáticamente.</span>
+                </div>
+
+                <!-- Detalle de Imputación Prelación Preview -->
+                <div id="panel-imputacion" class="hidden p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                    <div class="text-xs font-bold text-slate-800 uppercase tracking-wider">Desglose de Imputación de Pago</div>
+                    
+                    <div class="space-y-1.5 text-xs">
+                        <div class="flex justify-between text-rose-700">
+                            <span>1° Intereses por Mora (<span id="txt-dias-mora">0</span> días):</span>
+                            <strong id="prev-mora">S/ 0.00</strong>
+                        </div>
+                        <div class="flex justify-between text-emerald-700">
+                            <span>2° Interés Compensatorio:</span>
+                            <strong id="prev-comp">S/ 0.00</strong>
+                        </div>
+                        <div class="flex justify-between text-slate-700">
+                            <span>3° Amortización de Capital:</span>
+                            <strong id="prev-cap">S/ 0.00</strong>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-200 flex justify-between items-center">
+                        <span class="font-extrabold text-slate-900 text-xs">Total Exigible Liquidado:</span>
+                        <span id="prev-total" class="text-lg font-black text-brand-upc">S/ 0.00</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Monto a Cobrar (S/) *</label>
+                    <input type="number" step="0.01" id="monto-pagado" name="monto_pagado" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-base font-black text-slate-900">
+                    <span class="text-[11px] text-rose-600 font-semibold mt-1 block">Regla: No se admiten pagos parciales. El monto debe ser el total exigible.</span>
+                </div>
+
+                <button type="submit" id="btn-cobrar" disabled class="w-full py-3.5 bg-emerald-600 text-white font-extrabold rounded-xl shadow-lg hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    <span>Efectuar Cobranza e Imputar Pago</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Historial de Pagos y Comprobantes Recientes (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h2 class="text-base font-extrabold text-slate-900">Últimos Recibos de Pago Emitidos</h2>
+                <span class="text-xs text-slate-500 font-medium">Historial de caja</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                        <tr>
+                            <th class="p-3">Recibo / Fecha</th>
+                            <th class="p-3">Cliente</th>
+                            <th class="p-3 text-right">Mora</th>
+                            <th class="p-3 text-right">Interés</th>
+                            <th class="p-3 text-right">Capital</th>
+                            <th class="p-3 text-right">Total Pagado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for pg in pagos %}
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3">
+                                <span class="font-mono font-bold text-slate-900">{{ pg.num_comprobante }}</span>
+                                <div class="text-[11px] text-slate-400">{{ pg.fecha_pago }}</div>
+                            </td>
+                            <td class="p-3 font-semibold text-slate-800">{{ pg.cliente_nombre }}</td>
+                            <td class="p-3 text-right text-rose-600 font-bold">{{ pg.abono_mora | moneda }}</td>
+                            <td class="p-3 text-right text-emerald-600 font-bold">{{ pg.abono_compensatorio | moneda }}</td>
+                            <td class="p-3 text-right text-slate-700 font-bold">{{ pg.abono_capital | moneda }}</td>
+                            <td class="p-3 text-right font-black text-slate-900 text-sm">{{ pg.monto_total_pagado | moneda }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="p-8 text-center text-slate-400">No se han registrado pagos en caja todavía.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let liqActual = null;
+
+    function cargarLiquidacion() {
+        const select = document.getElementById('select-liq');
+        const opt = select.options[select.selectedIndex];
+        const panel = document.getElementById('panel-imputacion');
+        const btn = document.getElementById('btn-cobrar');
+
+        if (!opt || !opt.value) {
+            liqActual = null;
+            panel.classList.add('hidden');
+            btn.disabled = true;
+            return;
+        }
+
+        liqActual = {
+            id: opt.value,
+            capital: parseFloat(opt.dataset.capital),
+            comp: parseFloat(opt.dataset.comp),
+            totalBase: parseFloat(opt.dataset.total),
+            pagoPactada: opt.dataset.pagoPactada,
+            tasaMora: parseFloat(opt.dataset.tasaMora),
+            tipoMora: opt.dataset.tipoMora
+        };
+
+        panel.classList.remove('hidden');
+        btn.disabled = false;
+        recalcularMora();
+    }
+
+    function recalcularMora() {
+        if (!liqActual) return;
+
+        const fPactada = new Date(liqActual.pagoPactada + 'T00:00:00');
+        const fReal = new Date(document.getElementById('fecha-pago').value + 'T00:00:00');
+
+        let diasMora = 0;
+        let intMora = 0.0;
+
+        if (fReal > fPactada) {
+            diasMora = Math.round((fReal - fPactada) / (1000 * 60 * 60 * 24));
+            // TED mora = (1 + TEA_mora)^(1/360) - 1
+            const tedMora = Math.pow(1.0 + liqActual.tasaMora, 1.0 / 360.0) - 1.0;
+            intMora = liqActual.totalBase * (Math.pow(1.0 + tedMora, diasMora) - 1.0);
+            intMora = Math.round(intMora * 100) / 100;
+        }
+
+        const totalExigible = Math.round((liqActual.totalBase + intMora) * 100) / 100;
+
+        document.getElementById('txt-dias-mora').innerText = diasMora;
+        document.getElementById('prev-mora').innerText = `S/ ${intMora.toFixed(2)}`;
+        document.getElementById('prev-comp').innerText = `S/ ${liqActual.comp.toFixed(2)}`;
+        document.getElementById('prev-cap').innerText = `S/ ${liqActual.capital.toFixed(2)}`;
+        document.getElementById('prev-total').innerText = `S/ ${totalExigible.toFixed(2)}`;
+
+        // Prellenar monto
+        document.getElementById('monto-pagado').value = totalExigible.toFixed(2);
+    }
+</script>
+{% endblock %}

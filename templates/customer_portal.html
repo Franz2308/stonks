@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Cuenta Corriente - Portal del Cliente{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    {% if cliente %}
+    <!-- Header Cliente -->
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-red-400">
+                <i data-lucide="store" class="w-4 h-4"></i>
+                <span>{{ cliente.tienda_nombre }}</span>
+            </div>
+            <h1 class="text-2xl font-black mt-1">{{ cliente.nombres }} {{ cliente.apellidos }}</h1>
+            <p class="text-xs text-slate-400 font-mono mt-0.5">{{ cliente.tipo_documento }}: {{ cliente.num_documento }}</p>
+        </div>
+        <div class="text-left sm:text-right">
+            <span class="text-xs text-slate-400 block">Día de Corte: {{ cliente.dia_corte }} de cada mes</span>
+            <span class="text-sm font-bold text-emerald-400 block mt-0.5">Día de Pago: {{ cliente.dia_pago }} de cada mes</span>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Balance -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Límite Aprobado</span>
+            <div class="text-2xl font-black text-slate-900 mt-1">{{ cliente.limite_credito | moneda }}</div>
+            <p class="text-[11px] text-slate-500 mt-0.5">Línea de crédito autorizada</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Deuda Total Pendiente</span>
+            <div class="text-2xl font-black text-rose-600 mt-1">{{ deuda_total | moneda }}</div>
+            <p class="text-[11px] text-slate-500 mt-0.5">Saldo pendiente de liquidación</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Crédito Disponible</span>
+            <div class="text-2xl font-black text-emerald-600 mt-1">{{ credito_disponible | moneda }}</div>
+            <p class="text-[11px] text-slate-500 mt-0.5">Margen para nuevas compras</p>
+        </div>
+    </div>
+
+    <!-- Compras a Crédito y Cronogramas -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-6">
+        <div class="border-b border-slate-100 pb-3 flex justify-between items-center">
+            <h2 class="text-base font-extrabold text-slate-900 flex items-center">
+                <i data-lucide="shopping-bag" class="w-5 h-5 mr-2 text-brand-upc"></i>
+                Mis Compras a Crédito Registradas
+            </h2>
+            <span class="text-xs text-slate-400">{{ ventas | length }} compras registradas</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                    <tr>
+                        <th class="p-3">Ticket / Fecha</th>
+                        <th class="p-3">Modalidad</th>
+                        <th class="p-3 text-right">Capital</th>
+                        <th class="p-3 text-right">Intereses</th>
+                        <th class="p-3 text-right">Total a Pagar</th>
+                        <th class="p-3 text-center">Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for v in ventas %}
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3">
+                            <span class="font-mono font-bold text-slate-900">{{ v.num_ticket }}</span>
+                            <div class="text-slate-400">{{ v.fecha_compra }} ({{ v.hora_compra }})</div>
+                        </td>
+                        <td class="p-3">
+                            {% if v.modalidad == 'Fin_De_Mes' %}
+                            <span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold">Fin de Mes</span>
+                            {% else %}
+                            <span class="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold">{{ v.num_cuotas }} Cuotas Francesas</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-3 text-right font-medium text-slate-700">{{ v.monto_total_lista | moneda }}</td>
+                        <td class="p-3 text-right text-emerald-600 font-semibold">{{ v.total_intereses | moneda }}</td>
+                        <td class="p-3 text-right font-black text-slate-900 text-sm">{{ v.total_a_pagar | moneda }}</td>
+                        <td class="p-3 text-center">
+                            {% if v.estado == 'Pagado' %}
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">Pagado</span>
+                            {% elif v.estado == 'En_Mora' %}
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800">En Mora</span>
+                            {% else %}
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">Pendiente</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="p-6 text-center text-slate-400">No tiene compras a crédito registradas.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Cronograma de Cuotas si tiene créditos en cuotas -->
+        {% if cuotas %}
+        <div class="pt-6 border-t border-slate-100 space-y-3">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                <i data-lucide="calendar-check" class="w-4 h-4 mr-1.5 text-purple-600"></i>
+                Calendario de Cuotas Mensuales (Método Francés Vencido Simple Ordinario)
+            </h3>
+            <div class="border border-slate-200 rounded-xl overflow-hidden">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-purple-50 text-purple-900 font-bold border-b border-purple-100">
+                        <tr>
+                            <th class="p-2.5">Ticket</th>
+                            <th class="p-2.5">N° Cuota</th>
+                            <th class="p-2.5">Vencimiento</th>
+                            <th class="p-2.5 text-right">Cuota Fija</th>
+                            <th class="p-2.5 text-right">Amortización</th>
+                            <th class="p-2.5 text-right">Interés</th>
+                            <th class="p-2.5 text-right">Saldo Restante</th>
+                            <th class="p-2.5 text-center">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for q in cuotas %}
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-2.5 font-mono text-slate-500">{{ q.num_ticket }}</td>
+                            <td class="p-2.5 font-bold text-slate-800">Cuota {{ q.numero_cuota }}</td>
+                            <td class="p-2.5 font-semibold text-slate-700">{{ q.fecha_vencimiento }}</td>
+                            <td class="p-2.5 text-right font-black text-brand-upc">{{ q.cuota | moneda }}</td>
+                            <td class="p-2.5 text-right">{{ q.amortizacion | moneda }}</td>
+                            <td class="p-2.5 text-right text-emerald-600">{{ q.interes | moneda }}</td>
+                            <td class="p-2.5 text-right font-mono text-slate-600">{{ q.saldo_final | moneda }}</td>
+                            <td class="p-2.5 text-center">
+                                {% if q.estado == 'Pagada' %}
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Pagada</span>
+                                {% else %}
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Pendiente</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="bg-white p-12 rounded-3xl text-center border border-slate-200">
+        <i data-lucide="user-x" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
+        <h2 class="text-lg font-bold text-slate-800">No se encontró una línea de crédito activa</h2>
+        <p class="text-sm text-slate-500 mt-1">Acérquese a su comercio de barrio para que el administrador le asigne una línea de crédito.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

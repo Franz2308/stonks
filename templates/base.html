@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Stonks{% endblock %} - Crédito Comercial de Barrio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                            upc: '#c8102e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 antialiased">
+    <!-- Navbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <a href="{{ url_for('index') }}" class="flex items-center space-x-2 text-brand-upc font-black text-2xl tracking-tight">
+                        <i data-lucide="trending-up" class="w-8 h-8"></i>
+                        <span>STONKS</span>
+                    </a>
+                    <span class="text-xs bg-red-100 text-brand-upc font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        Finanzas SI642
+                    </span>
+                    {% if current_tienda %}
+                    <span class="hidden md:inline-flex items-center text-sm font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-md border border-slate-200">
+                        <i data-lucide="store" class="w-4 h-4 mr-1 text-slate-500"></i>
+                        {{ current_tienda.nombre_comercial }} ({{ current_tienda.giro }})
+                    </span>
+                    {% endif %}
+                </div>
+
+                <!-- Navigation Links -->
+                {% if session.user_id %}
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    {% if session.rol == 'admin_sistema' %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i> Tiendas
+                    </a>
+                    {% elif session.rol == 'admin_tienda' %}
+                    <a href="{{ url_for('store_dashboard') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('pos_credito') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
+                        <i data-lucide="shopping-cart" class="w-4 h-4"></i> POS Crédito
+                    </a>
+                    <a href="{{ url_for('liquidaciones') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
+                        <i data-lucide="file-text" class="w-4 h-4"></i> Listados Corte
+                    </a>
+                    <a href="{{ url_for('cobranzas') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
+                        <i data-lucide="banknote" class="w-4 h-4"></i> Caja y Pagos
+                    </a>
+                    <a href="{{ url_for('clientes') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
+                        <i data-lucide="users" class="w-4 h-4"></i> Clientes
+                    </a>
+                    <a href="{{ url_for('productos') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
+                        <i data-lucide="package" class="w-4 h-4"></i> Catálogo
+                    </a>
+                    {% elif session.rol == 'cliente' %}
+                    <a href="{{ url_for('customer_portal') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
+                        <i data-lucide="wallet" class="w-4 h-4"></i> Mi Cuenta Corriente
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('simulator') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-upc hover:bg-red-50 flex items-center gap-1.5">
+                        <i data-lucide="calculator" class="w-4 h-4"></i> Simulador
+                    </a>
+                </nav>
+
+                <!-- User profile & Logout -->
+                <div class="flex items-center space-x-3">
+                    <div class="text-right hidden sm:block">
+                        <div class="text-xs font-bold text-slate-900 leading-tight">{{ session.nombre_completo }}</div>
+                        <div class="text-[11px] font-medium text-slate-500 uppercase">{{ session.rol.replace('_', ' ') }}</div>
+                    </div>
+                    <a href="{{ url_for('logout') }}" title="Cerrar sesión" class="p-2 text-slate-500 hover:text-brand-upc hover:bg-red-50 rounded-lg transition-colors">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                    </a>
+                </div>
+                {% else %}
+                <div class="flex items-center space-x-2">
+                    <a href="{{ url_for('simulator') }}" class="text-sm font-semibold text-slate-600 hover:text-brand-upc px-3 py-1.5">
+                        Simulador
+                    </a>
+                    <a href="{{ url_for('login') }}" class="text-sm font-bold bg-brand-upc text-white px-4 py-2 rounded-lg hover:bg-red-700 shadow-sm transition">
+                        Iniciar Sesión
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="space-y-2">
+                {% for category, message in messages %}
+                    {% set bg = 'bg-blue-50 border-blue-200 text-blue-800' %}
+                    {% set icon = 'info' %}
+                    {% if category == 'success' %}
+                        {% set bg = 'bg-emerald-50 border-emerald-200 text-emerald-800' %}
+                        {% set icon = 'check-circle' %}
+                    {% elif category == 'danger' %}
+                        {% set bg = 'bg-rose-50 border-rose-200 text-rose-800' %}
+                        {% set icon = 'alert-triangle' %}
+                    {% elif category == 'warning' %}
+                        {% set bg = 'bg-amber-50 border-amber-200 text-amber-800' %}
+                        {% set icon = 'alert-circle' %}
+                    {% endif %}
+                    <div class="flex items-center p-4 border rounded-xl shadow-sm {{ bg }}" role="alert">
+                        <i data-lucide="{{ icon }}" class="w-5 h-5 mr-3 flex-shrink-0"></i>
+                        <div class="text-sm font-medium leading-relaxed">{{ message }}</div>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-auto py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            <p class="font-medium text-slate-700">Sistema de Control de Cuenta Corriente y Crédito de Barrio (Multi-tienda)</p>
+            <p class="mt-1">SI642 Finanzas e Ingeniería Económica &bull; UPC Ciclo 2026-20 &bull; Base 360 &bull; Método Francés &bull; Prelación de Pagos</p>
+        </div>
+    </footer>
+
+    <!-- Init Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
