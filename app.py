@@ -876,7 +876,7 @@ def cobranzas():
         ))
         
         # Actualizar estado de la liquidación
-        estado_liq = "Pagado_Con_Mora" if dias_mora > 0 else "Pagado"
+        estado_liq = "Pagado"
         cursor.execute("""
             UPDATE liquidaciones_corte
             SET estado = ?, fecha_pago_real = ?, total_interes_mora = ?, dias_mora = ?

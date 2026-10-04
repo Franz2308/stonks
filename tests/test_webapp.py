@@ -82,5 +82,28 @@ class TestStonksWebApp(unittest.TestCase):
         self.assertEqual(data["data"]["dias_gracia"], 11)
         self.assertEqual(data["data"]["capital_capitalizado"], 301.98)
 
+    def test_07_cobranzas_pago_con_mora(self):
+        with self.client:
+            self.client.get("/demo-login/tienda")
+            res_get = self.client.get("/cobranzas")
+            self.assertEqual(res_get.status_code, 200)
+            self.assertIn(b"Caja", res_get.data)
+            
+            # Obtener liquidación 1
+            from database import get_db_connection
+            conn = get_db_connection()
+            liq = conn.execute("SELECT * FROM liquidaciones_corte WHERE id = 1").fetchone()
+            conn.close()
+            
+            if liq:
+                # Simular pago puntual (26 de setiembre)
+                res_post = self.client.post("/cobranzas", data={
+                    "liquidacion_id": liq["id"],
+                    "fecha_pago": "2026-09-26",
+                    "monto_pagado": liq["total_exigible"]
+                }, follow_redirects=True)
+                self.assertEqual(res_post.status_code, 200)
+                self.assertIn(b"Cobro registrado con", res_post.data)
+
 if __name__ == '__main__':
     unittest.main()
