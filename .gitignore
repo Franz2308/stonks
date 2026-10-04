@@ -22,3 +22,6 @@ htmlcov/
 
 # Google Drive sync
 .tmp.driveupload/
+
+# Temporary Office files
+~$*.docx
