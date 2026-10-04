@@ -45,7 +45,7 @@ El motor financiero ([`financial_engine.py`](file:///C:/Users/Frank/Documents/an
 |---|---|
 | **Administrador del Sistema** | Gestión global de tiendas (altas y bajas), monitoreo de clientes atendidos, volumen consolidado de crédito. |
 | **Administrador de Tienda (Dueño/Cajero)** | Dashboard financiero con gráficos, catálogo de productos con precio contado vs lista (crédito) y modalidades permitidas, gestión de clientes y asignación de límites de crédito, punto de venta (POS) a crédito con validación en vivo, emisión de listados de corte y caja de cobranzas con prelación de pagos. |
-| **Cliente (Vecino)** | Portal móvil adaptativo para consultar deuda actual, saldo de línea disponible, detalle cronológico de consumos y cronograma de cuotas francesas. |
+| **Cliente Particular** | Portal móvil adaptativo para consultar deuda actual, saldo de línea disponible, detalle cronológico de consumos y cronograma de cuotas francesas. |
 | **Público / Todos** | Simulador financiero interactivo y conversor de tasas. |
 
 ---
@@ -59,7 +59,7 @@ La pantalla de inicio de sesión incluye botones de acceso con 1-click para eval
 | **Admin Sistema** | `admin` | `admin123` | Administrador general de la plataforma |
 | **Admin Tienda** | `bodega_don_pepe` | `tienda123` | Dueño de "Bodega Don Pepe" (Giro: Bodega) |
 | **Admin Tienda 2** | `panaderia_espiga` | `espiga123` | Dueño de "Panadería La Espiga" (Giro: Panadería) |
-| **Cliente** | `cliente_juan` | `cliente123` | Juan Pérez (Cliente vecino con línea de crédito) |
+| **Cliente** | `cliente_juan` | `cliente123` | Juan Pérez (Cliente particular con línea de crédito) |
 
 ---
 
@@ -136,7 +136,7 @@ stonks/
 │   ├── settlement.html        # Gestión de listados de corte mensuales
 │   ├── settlement_detail.html # Detalle imprimible de listado de pago con compras y mora
 │   ├── payment.html           # Caja y cobranzas con orden de prelación legal
-│   ├── customer_portal.html   # Portal móvil para el cliente vecino
+│   ├── customer_portal.html   # Portal móvil para el cliente particular
 │   └── simulator.html         # Simulador financiero y conversor de tasas
 │
 └── tests/

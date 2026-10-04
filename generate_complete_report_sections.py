@@ -312,7 +312,7 @@ def build_section_6b(doc):
             "id": "6.b.1",
             "name": "Pantalla de Inicio de Sesión y Autenticación con Accesos de Demostración",
             "short_desc": "Acceso seguro y selección de roles con credenciales de prueba rápida",
-            "func": "Constituye el punto de acceso inicial a la plataforma. Permite la autenticación segura de usuarios mediante credenciales encriptadas (SHA-256) y delimita los permisos de navegación según el rol asignado (Administrador del Sistema, Administrador de Tienda o Cliente Vecino).",
+            "func": "Constituye el punto de acceso inicial a la plataforma. Permite la autenticación segura de usuarios mediante credenciales encriptadas (SHA-256) y delimita los permisos de navegación según el rol asignado (Administrador del Sistema, Administrador de Tienda o Cliente Particular).",
             "elements": [
                 ("Campo 'Identificador de Usuario': ", "Caja de texto para el nombre de usuario único del operador o cliente."),
                 ("Campo 'Clave de Acceso': ", "Entrada oculta para la contraseña de seguridad."),
@@ -327,7 +327,7 @@ def build_section_6b(doc):
             "short_desc": "Empadronamiento de nuevos usuarios y creación de cuentas comerciales",
             "func": "Permite el auto-registro guiado de nuevos clientes o comercios en la plataforma, asignando de manera inmediata un perfil operativo y solicitando los datos obligatorios de contacto y documento de identidad.",
             "elements": [
-                ("Selector de Tipo de Registro: ", "Pestañas para alternar entre perfil 'Cliente' o 'Comercio Independiente'."),
+                ("Selector de Tipo de Registro: ", "Selectores para alternar entre perfil 'Cliente Particular' o 'Dueño de Comercio'."),
                 ("Campos de Identificación: ", "Nombre completo, correo electrónico, documento oficial (DNI o RUC) y teléfono."),
                 ("Campos de Seguridad: ", "Definición de nombre de usuario y contraseña con confirmación."),
                 ("Botón 'Crear Cuenta en Stonks': ", "Valida la unicidad del documento y persiste la entidad en la base de datos.")
@@ -434,9 +434,9 @@ def build_section_6b(doc):
         },
         {
             "id": "6.b.10",
-            "name": "Portal de Autoservicio del Cliente Vecino y Calendario de Cuotas",
+            "name": "Portal de Autoservicio del Cliente Particular y Calendario de Cuotas",
             "short_desc": "Consulta transparente de línea de crédito, deuda actual y cronograma francés",
-            "func": "Interfaz diseñada para que el cliente vecino consulte con total transparencia desde su teléfono móvil o computadora el estado de su cuenta corriente, sus compras registradas, su cupo disponible y el cronograma de amortización francesa de sus créditos en cuotas.",
+            "func": "Interfaz diseñada para que el cliente particular consulte con total transparencia desde su teléfono móvil o computadora el estado de su cuenta corriente, sus compras registradas, su cupo disponible y el cronograma de amortización francesa de sus créditos en cuotas.",
             "elements": [
                 ("Tarjeta de Identidad y Tienda: ", "Nombre del comercio emisor, nombre del vecino y fechas asignadas de corte y pago."),
                 ("Tríada de Balances: ", "Tres tarjetas informativas: Límite Aprobado, Deuda Pendiente y Crédito Disponible."),
@@ -752,7 +752,7 @@ def build_section_6d(doc):
     
     add_heading_4(doc, "a) Parámetros Contractuales y de Configuración:")
     add_bullet_item(doc, "Establecimiento Comercial: ", "Bodega Don Pepe (RUC: 10458923412, Giro: Minimarket de Barrio).", space_after=5)
-    add_bullet_item(doc, "Cliente Vecino: ", "Juan Pérez Gómez (DNI: 09485721, Dirección: Jr. Las Flores 342, San Miguel).", space_after=5)
+    add_bullet_item(doc, "Cliente Particular: ", "Juan Pérez Gómez (DNI: 09485721, Dirección: Jr. Las Flores 342, San Miguel).", space_after=5)
     add_bullet_item(doc, "Línea de Crédito Autorizada: ", "S/ 500.00.", space_after=5)
     add_bullet_item(doc, "Tasa Compensatoria Contractual: ", "TEA = 24.00% anual.", space_after=5)
     add_bullet_item(doc, "Tasa Moratoria Contractual: ", "TEA_mora = 5.00% anual.", space_after=5)
@@ -1152,16 +1152,17 @@ def main():
     print("Construyendo Sección 6.d (Diseño de Datos de prueba con tablas rojas UPC)...")
     build_section_6d(doc)
     
-    print(f"Guardando documento completo en: {output_complete}")
-    doc.save(output_complete)
-    print("¡Finanzas Trabajo Parcial_Completo.docx guardado con éxito!")
-    
     try:
         doc.save(target_path)
         print(f"¡{target_path} actualizado exitosamente!")
     except Exception as e:
-        print(f"Aviso: No se pudo sobrescribir directamente '{target_path}' porque Word lo tiene abierto ({e}).")
-        print(f"El documento completo y actualizado está disponible en: '{output_complete}'.")
+        print(f"Aviso: No se pudo sobrescribir '{target_path}' ({e}).")
+
+    try:
+        doc.save(output_complete)
+        print(f"¡{output_complete} guardado con éxito!")
+    except Exception as e:
+        print(f"Aviso: No se pudo sobrescribir '{output_complete}' ({e}). Está abierto en Word.")
 
 if __name__ == "__main__":
     main()
