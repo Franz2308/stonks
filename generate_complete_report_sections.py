@@ -299,10 +299,9 @@ def build_section_6b(doc):
         "(estilo BundleRock), caracterizado por una cabecera corporativa azul marino (#1a365d), botones utilitarios Win32 con "
         "relieve sutil, tarjetas con bordes nítidos de alta visibilidad y una tipografía optimizada con Inter para textos "
         "descriptivos y JetBrains Mono con cifras tabulares para la alineación rigurosa de importes monetarios y cronogramas.\n\n"
-        "En estricto cumplimiento con el requerimiento de la rúbrica de evaluación del curso, cada una de las pantallas y "
-        "ventanas de diálogo del sistema integra de forma nativa un medio electrónico de ayuda e indicaciones de uso, "
-        "compuesto por tooltips flotantes en cada control de entrada, badges explicativos de reglas financieras (Anexo A), "
-        "medidores dinámicos de saldo crediticio disponible, alertas tempranas por sobregiro y un desglose interactivo previo "
+        "Asimismo, cada una de las pantallas y ventanas de diálogo del sistema integra de forma nativa un medio electrónico de ayuda e "
+        "indicaciones de uso, compuesto por tooltips flotantes en cada control de entrada, badges explicativos de reglas financieras "
+        "(Anexo A), medidores dinámicos de saldo crediticio disponible, alertas tempranas por sobregiro y un desglose interactivo previo "
         "que exhibe la imputación legal de pagos antes de ejecutar cualquier cobranza en caja.",
         space_after=9
     )
@@ -338,7 +337,7 @@ def build_section_6b(doc):
             "id": "6.b.3",
             "name": "Tablero Principal de Control Financiero de la Tienda (Dashboard)",
             "short_desc": "Métricas consolidadas de cartera, cuentas por cobrar y gráfico de colocación",
-            "func": "Proporciona al dueño del establecimiento comercial una vista panorámica integral de la salud de su cartera crediticia, consolidando en tiempo real las cuentas por cobrar, los intereses devengados acumulados y el total de vecinos bajo línea autorizada.",
+            "func": "Proporciona al dueño del establecimiento comercial una vista panorámica integral de la salud de su cartera crediticia, consolidando en tiempo real las cuentas por cobrar, los intereses devengados acumulados y el total de clientes particulares bajo línea autorizada.",
             "elements": [
                 ("Cuatro Indicadores Clave (KPIs): ", "Capital Colocado, Intereses Compensatorios Devengados, Cartera Activa y Clientes en Mora."),
                 ("Barra de Utilización Global de Crédito: ", "Termómetro gráfico del porcentaje de línea total ocupada por los clientes."),
@@ -351,9 +350,9 @@ def build_section_6b(doc):
             "id": "6.b.4",
             "name": "Pantalla de Registro y Apertura de Cuentas Corrientes para Clientes",
             "short_desc": "Configuración contractual de línea de crédito, tasas TEA/TNA y fechas de ciclo",
-            "func": "Permite al comerciante empadronar formalmente a un cliente vecino, asignándole un límite de endeudamiento seguro y estableciendo las cláusulas financieras de su contrato crediticio (régimen de tasa, periodicidad y fechas de corte/pago).",
+            "func": "Permite al comerciante empadronar formalmente a un cliente particular, asignándole un límite de endeudamiento seguro y estableciendo las cláusulas financieras de su contrato crediticio (régimen de tasa, periodicidad y fechas de corte/pago).",
             "elements": [
-                ("Selector de Cliente: ", "Lista desplegable para asociar el cliente vecino a la tienda actual."),
+                ("Selector de Cliente: ", "Lista desplegable para asociar el cliente particular a la tienda actual."),
                 ("Campo 'Límite de Crédito Autorizado (S/)': ", "Importe máximo de financiamiento asignado al cliente."),
                 ("Selector 'Tipo de Tasa Compensatoria': ", "Alternador entre Tasa Efectiva Anual (TEA) y Tasa Nominal Anual (TNA)."),
                 ("Campos de Valor de Tasa y Capitalización: ", "Porcentaje pactado y frecuencia de capitalización (diaria m=360 o mensual m=12)."),
@@ -370,7 +369,7 @@ def build_section_6b(doc):
             "elements": [
                 ("Tabla de Inventario Vigente: ", "Lista de productos con SKU, nombre, categoría, unidad, stock disponible y precio unitario."),
                 ("Formulario de Alta de Producto: ", "Entradas para denominación comercial, categoría, unidad de medida y precio en Soles."),
-                ("Filtros Dinámicos: ", "Buscador instantáneo por nombre y selector por familias (Abarrotes, Panadería, Bebidas, etc.).")
+                ("Control de Estado y Acciones: ", "Permite dar de baja o reactivar artículos del catálogo comercial según la disponibilidad en tienda.")
             ],
             "help": "La interfaz advierte que el precio registrado corresponde al valor de venta final de lista que se cargará como capital de la compra, y sobre el cual el sistema liquidará los intereses de financiamiento según la modalidad pactada."
         },
@@ -380,8 +379,8 @@ def build_section_6b(doc):
             "short_desc": "Terminal de venta rápida con validación de línea disponible y selección de modalidad",
             "func": "Constituye la herramienta operativa principal de despacho en mostrador. Permite seleccionar un cliente con cuenta activa, agregar productos al carrito de compras, verificar en tiempo real que no se sobregire la línea autorizada y seleccionar entre la modalidad 'Fin de Mes' o 'Cuotas Francesas'.",
             "elements": [
-                ("Selector de Cliente con Línea Activa: ", "Desplegable con búsqueda rápida de clientes habilitados."),
-                ("Monitor de Crédito en Tiempo Real: ", "Muestra Límite Aprobado, Saldo Deudor Actual y Saldo Disponible Disponible."),
+                ("Selector de Cliente con Línea Activa: ", "Menú desplegable para seleccionar el cliente particular titular de la cuenta corriente."),
+                ("Monitor de Crédito en Tiempo Real: ", "Muestra Límite Aprobado, Saldo Deudor Actual y Crédito Disponible."),
                 ("Selector de Modalidad de Pago: ", "Opciones 'A Fin de Mes' (un solo cobro acumulado) o 'En Cuotas' (amortización francesa)."),
                 ("Parrilla de Selección de Productos y Cantidades: ", "Permite añadir múltiples ítems calculando el subtotal de venta."),
                 ("Botón 'Procesar Venta a Crédito': ", "Ejecuta la transacción y genera el ticket de consumo.")
@@ -398,7 +397,7 @@ def build_section_6b(doc):
                 ("Campos de Fechas de Operación: ", "Fecha de retiro de la mercadería y fecha pactada del primer vencimiento."),
                 ("Panel de Métricas Previas: ", "Exhibe días de gracia (dg), interés de gracia devengado (Ig) y capital inicial capitalizado (P')."),
                 ("Tabla de Cronograma Preliminar: ", "Proyección de cuota fija (R), interés mensual, amortización y saldo deudor período a período."),
-                ("Botón 'Emitir y Formalizar Crédito': ", "Guarda el crédito e imprime el cronograma de pagos del cliente.")
+                ("Botón 'Aprobar y Emitir Venta a Crédito': ", "Confirma la transacción crediticia y genera el ticket de venta en cuotas.")
             ],
             "help": "Un banner informativo detalla el fundamento del cálculo: 'Método Francés Vencido Simple Ordinario. Los intereses devengados durante los días de gracia total se capitalizan íntegramente al saldo deudor de conformidad con el Anexo A del curso'."
         },
@@ -408,8 +407,8 @@ def build_section_6b(doc):
             "short_desc": "Generación del estado de cuenta al corte, compras pre/post corte y monto exigible",
             "func": "Módulo administrativo que ejecuta el proceso de corte de ciclo para cada cliente. Consolida las compras efectuadas hasta la fecha de corte, calcula los intereses compensatorios diarios exactos hasta la fecha de pago y difiere las compras posteriores al mes siguiente.",
             "elements": [
-                ("Selector de Cliente y Ciclo: ", "Permite escoger la cuenta del vecino y el período mensual a liquidar."),
-                ("Botonera de Ejecución: ", "Botón 'Generar Estado de Cuenta' y botón 'Simular Cierre de Período'."),
+                ("Selector de Cliente y Ciclo: ", "Permite escoger la cuenta del cliente particular y el período mensual a liquidar."),
+                ("Botón de Emisión: ", "Botón 'Generar Listado de Pago' para procesar el corte de ciclo y formalizar la cuenta exigible."),
                 ("Tabla de Compras Liquidadas del Ciclo: ", "Lista de consumos pre-corte con fecha, capital, días de crédito e interés compensatorio."),
                 ("Tarjeta de Resumen Exigible: ", "Subtotal de Capital, Total de Intereses Compensatorios y Total a Pagar en Fecha Pactada."),
                 ("Panel de Compras Diferidas: ", "Sección separada que lista las compras post-corte trasladadas al ciclo siguiente.")
@@ -422,7 +421,7 @@ def build_section_6b(doc):
             "short_desc": "Recepción de pagos en efectivo, cómputo automático de mora e imputación legal",
             "func": "Interfaz de ventanilla para procesar las cancelaciones de deuda. Compara la fecha en que el cliente se acerca a pagar contra la fecha pactada: si existe retraso, calcula el ítem diferenciado de intereses moratorios y aplica de inmediato el orden legal de imputación (1° Mora, 2° Intereses Compensatorios, 3° Capital).",
             "elements": [
-                ("Selector de Cuenta con Deuda Exigible: ", "Búsqueda del cliente y visualización del listado liquidado."),
+                ("Selector de Cuenta con Deuda Exigible: ", "Menú desplegable para seleccionar el listado de pago pendiente del cliente."),
                 ("Campo 'Fecha Efectiva de Pago': ", "Fecha en que se recibe el dinero en caja (por defecto fecha actual, configurable)."),
                 ("Panel de Cálculo de Recargo Moratorio: ", "Muestra días de mora transcurridos (dm) y el monto exacto de 'Intereses por mora'."),
                 ("Panel Dinámico de Imputación Legal: ", "Desglose visible en tres renglones: 1° Intereses por Mora, 2° Interés Compensatorio y 3° Amortización de Capital."),
@@ -438,7 +437,7 @@ def build_section_6b(doc):
             "short_desc": "Consulta transparente de línea de crédito, deuda actual y cronograma francés",
             "func": "Interfaz diseñada para que el cliente particular consulte con total transparencia desde su teléfono móvil o computadora el estado de su cuenta corriente, sus compras registradas, su cupo disponible y el cronograma de amortización francesa de sus créditos en cuotas.",
             "elements": [
-                ("Tarjeta de Identidad y Tienda: ", "Nombre del comercio emisor, nombre del vecino y fechas asignadas de corte y pago."),
+                ("Tarjeta de Identidad y Tienda: ", "Nombre del comercio emisor, nombre del cliente particular y fechas asignadas de corte y pago."),
                 ("Tríada de Balances: ", "Tres tarjetas informativas: Límite Aprobado, Deuda Pendiente y Crédito Disponible."),
                 ("Tabla de Compras Registradas: ", "Historial de consumos a crédito con fecha, modalidad, importe y estado de cancelación."),
                 ("Calendario de Cuotas Mensuales: ", "Tabla de amortización detallando para cada cuota el vencimiento, la cuota fija, amortización de capital, interés compensatorio y saldo insoluto restante.")
@@ -480,7 +479,7 @@ def build_section_6b(doc):
         for title, desc in s['elements']:
             add_bullet_item(doc, title, desc, space_after=5)
             
-        add_heading_4(doc, "Mecanismo de Ayuda e Indicaciones Integradas (Obligatorio de la Rúbrica):")
+        add_heading_4(doc, "Mecanismo de Ayuda e Indicaciones Integradas:")
         add_body_paragraph(doc, s['help'], space_after=8)
         
         add_image_placeholder_box(doc, s['id'], s['name'], s['short_desc'])
