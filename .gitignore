@@ -25,3 +25,7 @@ htmlcov/
 
 # Temporary Office files
 ~$*.docx
+
+# Documentos (no rastrear en el repositorio remoto)
+*.pdf
+*.docx
