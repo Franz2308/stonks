@@ -79,14 +79,14 @@
                             <th class="p-2.5 text-right">Total Ítem</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-200 font-mono">
+                    <tbody class="divide-y divide-slate-200 text-xs">
                         {% for v in ventas %}
                         <tr class="hover:bg-blue-50/40">
                             <td class="p-2.5">
-                                <span class="font-bold text-slate-900">{{ v.num_ticket }}</span>
-                                <div class="text-[10px] text-slate-500 font-sans">{{ v.fecha_compra }}</div>
+                                <span class="font-bold text-slate-900 font-mono">{{ v.num_ticket }}</span>
+                                <div class="text-[10px] text-slate-500 font-mono">{{ v.fecha_compra }}</div>
                             </td>
-                            <td class="p-2.5 text-slate-600">{{ v.hora_compra }}</td>
+                            <td class="p-2.5 text-slate-600 font-mono">{{ v.hora_compra }}</td>
                             <td class="p-2.5 font-sans">
                                 {% if v.modalidad == 'Fin_De_Mes' %}
                                 <span class="px-1.5 py-0.5 border border-blue-200 bg-blue-50 text-blue-800 font-bold text-[10px]">Fin de Mes</span>
@@ -94,9 +94,9 @@
                                 <span class="px-1.5 py-0.5 border border-purple-200 bg-purple-50 text-purple-800 font-bold text-[10px]">En Cuotas</span>
                                 {% endif %}
                             </td>
-                            <td class="p-2.5 text-right font-medium text-slate-700">{{ v.monto_total_lista | moneda }}</td>
-                            <td class="p-2.5 text-right text-emerald-700 font-medium">{{ v.total_intereses | moneda }}</td>
-                            <td class="p-2.5 text-right font-bold text-slate-900">{{ v.total_a_pagar | moneda }}</td>
+                            <td class="p-2.5 text-right font-medium text-slate-700 font-mono">{{ v.monto_total_lista | moneda }}</td>
+                            <td class="p-2.5 text-right text-emerald-700 font-medium font-mono">{{ v.total_intereses | moneda }}</td>
+                            <td class="p-2.5 text-right font-bold text-slate-900 font-mono">{{ v.total_a_pagar | moneda }}</td>
                         </tr>
                         {% else %}
                         <tr>

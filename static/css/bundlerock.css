@@ -1,11 +1,16 @@
 /*
-  bundlerock.css - Estilo Visual y Branding Oficial de BundleRock
+  bundlerock.css - Estilo Visual y Branding Oficial de BundleRock / Stonks
   Inspirado en el diseño utilitario Win32 retro-moderno de alta densidad.
+  Tipografía optimizada con Inter para máxima legibilidad y JetBrains Mono para datos contables.
   Estrictamente sin emojis, diseño sobrio y profesional.
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 :root {
-  --font-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  
   --color-header: #1a365d;
   --color-header-border: #0f2442;
   --color-header-logo: #244a77;
@@ -24,11 +29,22 @@
   --color-warning: #f59e0b;
 }
 
-body {
-  font-family: var(--font-system);
+html, body {
+  font-family: var(--font-sans);
   background-color: var(--color-bg-root);
   color: var(--color-text-main);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02" 1, "cv03" 1, "cv04" 1, "cv11" 1;
+  letter-spacing: -0.011em;
+}
+
+/* Numerals & Tabular Data */
+.font-mono, code, kbd, samp, pre {
+  font-family: var(--font-mono) !important;
+  font-feature-settings: "tnum" 1, "zero" 1;
+  letter-spacing: -0.02em;
 }
 
 /* Custom Scrollbar */
@@ -65,11 +81,13 @@ body {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   transition: all 120ms ease-in-out;
   cursor: pointer;
+  line-height: 1.25;
 }
 
 .btn-win32:hover {
   background-color: #f1f5f9;
   border-color: #64748b;
+  color: #0f172a;
 }
 
 .btn-win32:active {
@@ -86,6 +104,7 @@ body {
 .btn-win32-primary:hover {
   background-color: #244a77;
   border-color: #1a365d;
+  color: #ffffff;
 }
 
 .btn-win32-primary:active {
@@ -100,6 +119,7 @@ body {
 
 .btn-win32-accent:hover {
   background-color: #1d4ed8;
+  color: #ffffff;
 }
 
 /* Card and Panel Utilities */
@@ -117,6 +137,6 @@ body {
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   color: #334155;
 }

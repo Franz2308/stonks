@@ -82,27 +82,27 @@
                         <th class="px-3 py-2 text-right">Acción</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200 font-mono">
+                <tbody class="divide-y divide-slate-200 text-xs">
                     {% for t in tiendas %}
                     <tr class="hover:bg-blue-50/40">
-                        <td class="px-3 py-2 font-sans">
+                        <td class="px-3 py-2">
                             <div class="font-bold text-slate-900">{{ t.nombre_comercial }}</div>
                             <span class="inline-block mt-0.5 text-[10px] border border-blue-200 bg-blue-50 text-blue-800 font-semibold px-1.5 py-0.2 rounded-xs">
                                 {{ t.giro }}
                             </span>
                         </td>
                         <td class="px-3 py-2">
-                            <div class="font-bold text-slate-900">{{ t.ruc }}</div>
-                            <div class="text-[11px] text-slate-500 font-sans">{{ t.razon_social }}</div>
+                            <div class="font-bold text-slate-900 font-mono">{{ t.ruc }}</div>
+                            <div class="text-[11px] text-slate-500">{{ t.razon_social }}</div>
                         </td>
-                        <td class="px-3 py-2 font-sans">
+                        <td class="px-3 py-2">
                             <div class="font-semibold text-slate-800">{{ t.admin_nombre }}</div>
                             <div class="text-[10px] text-slate-500 font-mono">{{ t.admin_email }}</div>
                         </td>
-                        <td class="px-3 py-2 text-[11px] text-slate-600 font-sans max-w-xs truncate" title="{{ t.direccion }}">
+                        <td class="px-3 py-2 text-[11px] text-slate-600 max-w-xs truncate" title="{{ t.direccion }}">
                             {{ t.direccion }}
                         </td>
-                        <td class="px-3 py-2 text-center">
+                        <td class="px-3 py-2 text-center font-mono">
                             <span class="font-bold text-slate-900">{{ t.total_clientes }}</span> cli /
                             <span class="font-bold text-slate-900">{{ t.total_ventas }}</span> vtas
                         </td>
